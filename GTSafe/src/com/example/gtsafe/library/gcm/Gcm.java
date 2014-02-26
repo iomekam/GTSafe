@@ -35,7 +35,6 @@ public class Gcm
     
     String SENDER_ID = "21232026653";
     static final String TAG = "GCM";
-    String SERVERURL = "http://128.61.123.108/gtsafe_api/";
 
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
