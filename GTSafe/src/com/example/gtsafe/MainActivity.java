@@ -1,5 +1,7 @@
 package com.example.gtsafe;
 
+import java.sql.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.example.gtsafe.library.DBHelper;
@@ -83,22 +85,22 @@ public class MainActivity extends Activity {
 		
 		//view.setText(db.getCrimeData(1).getLocationName());
 		
-		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
-
-			@Override
-			public void OnGet(List<CrimeData> list) {
-				view.setText("Crimes: " + list.size());
-			}
-		});
-		
-//		
-//		db.getCrimesByZone(1, new OnDBGetListener<CrimeData>(){
+//		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
 //
 //			@Override
 //			public void OnGet(List<CrimeData> list) {
-//				view.setText("Crimes by Zone: " + list.size());
+//				view.setText("Crimes: " + list.size());
 //			}
 //		});
+		
+		
+		db.getCrimesByDate(new Date(new GregorianCalendar(2010, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
+
+			@Override
+			public void OnGet(List<CrimeData> list) {
+				view.setText("Crimes by Date: " + list.size());
+			}
+		});
 		
 		//view.setText(db.getCrimeData(19).getZone().getZoneInformation().getDescription().get(0));
 		//view.setText(""  + db.getZone(1).getZoneInformation().getDescription().size());

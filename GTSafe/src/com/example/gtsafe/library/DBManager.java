@@ -453,4 +453,35 @@ public class DBManager {
 			}
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
+	
+	public void getCrimesByDate(final java.sql.Date date, final OnDBGetListener<CrimeData> listener)
+	{
+		new AsyncTask<Void, Void, List<CrimeData>>() {
+			@Override
+			protected List<CrimeData> doInBackground(Void... arg0) {
+				List<CrimeData> dataList = new LinkedList<CrimeData>();
+
+				SQLiteDatabase db = instance.openDatabase();
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE Datetime(crime_date) >=  Datetime('" + date.toString() + "')";
+
+				Cursor c = db.rawQuery(selectQuery, null);
+				boolean hasNext = c.moveToFirst();
+
+				while (hasNext) {
+					dataList.add(getCrimeData(c.getInt(c
+							.getColumnIndex("crime_id"))));
+					hasNext = c.moveToNext();
+				}
+
+				c.close();
+				instance.closeDatabase();
+
+				return dataList;
+			}
+
+			public void onPostExecute(List<CrimeData> result) {
+				listener.OnGet(result);
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 }
