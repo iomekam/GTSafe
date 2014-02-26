@@ -30,7 +30,7 @@ public class DBRequester
 	private OnGetJSONListener listener;
 	private HttpParams param;
 	
-	private final String SERVERURL = "http://api-gtsafe.rhcloud.com/";
+	private final String SERVERURL = "http://myapp-gtsafe.rhcloud.com/";
 	
 	public DBRequester()
 	{
