@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
 	private String s = "";
 	private TextView view;
 	private Button view_Button;
+	private Button data_Button;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +86,13 @@ public class MainActivity extends Activity {
 		
 		//view.setText(db.getCrimeData(1).getLocationName());
 		
-//		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
-//
-//			@Override
-//			public void OnGet(List<CrimeData> list) {
-//				view.setText("Crimes: " + list.size());
-//			}
-//		});
-		
+		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
+
+			@Override
+			public void OnGet(List<CrimeData> list) {
+				view.setText("Crimes: " + list.size());
+			}
+		});
 		
 		db.getCrimesByDate(new Date(new GregorianCalendar(2010, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
 
@@ -101,6 +101,15 @@ public class MainActivity extends Activity {
 				view.setText("Crimes by Date: " + list.size());
 			}
 		});
+		
+//		
+//		db.getCrimesByZone(1, new OnDBGetListener<CrimeData>(){
+//
+//			@Override
+//			public void OnGet(List<CrimeData> list) {
+//				view.setText("Crimes by Zone: " + list.size());
+//			}
+//		});
 		
 		//view.setText(db.getCrimeData(19).getZone().getZoneInformation().getDescription().get(0));
 		//view.setText(""  + db.getZone(1).getZoneInformation().getDescription().size());
@@ -118,6 +127,16 @@ public class MainActivity extends Activity {
 		
 		//db.updateAllCleryAct();
 		//view.setText("" + Html.fromHtml(db.getCleryAct(2).getText()));
+		data_Button = (Button)findViewById(R.id.data_button2);
+		data_Button.setOnClickListener(new View.OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+			        Intent myIntent=new Intent(MainActivity.this,DataActivity.class);
+			        startActivity(myIntent);
+			        finish();
+			 }
+			 });
+		
 		((Button)findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
 			 @Override
 			 public void onClick(View v) {
@@ -125,8 +144,7 @@ public class MainActivity extends Activity {
 			        startActivity(myIntent);
 			        finish();
 			 }
-		});
-				
+		});		
 				
 	}
 	
