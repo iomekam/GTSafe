@@ -46,4 +46,8 @@ public class CrimeData
 	public ZoneData getZone() {
 		return zone;
 	}
+	
+	public String toString(){
+		return   "Crime Date "+date.toString();
+	}
 }
