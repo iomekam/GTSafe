@@ -9,16 +9,14 @@ public class CrimeData
 	private LatLng location;
 	private String locationName;
 	private Date date;
-	private LocationCode locationCode;
 	private OffenseType offense;
 	private ZoneData zone;
 	
-	public CrimeData(LatLng location, String locationName, Date date, LocationCode locationCode, OffenseType offense, ZoneData zone)
+	public CrimeData(LatLng location, String locationName, Date date, OffenseType offense, ZoneData zone)
 	{
 		this.location = location;
 		this.locationName = locationName;
 		this.date = date;
-		this.locationCode = locationCode;
 		this.offense = offense;
 		this.zone = zone;
 	}
@@ -33,10 +31,6 @@ public class CrimeData
 
 	public Date getDate() {
 		return date;
-	}
-
-	public LocationCode getLocationCode() {
-		return locationCode;
 	}
 
 	public OffenseType getOffense() {

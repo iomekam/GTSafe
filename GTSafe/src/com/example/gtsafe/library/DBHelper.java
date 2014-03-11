@@ -37,7 +37,6 @@ public class DBHelper extends SQLiteOpenHelper
 					"crime_id INTEGER PRIMARY KEY NOT NULL,\n" +
 					"crime_date date NOT NULL," +
 					"offense varchar(255) NOT NULL,\n" +
-					"location_code varchar(255) NOT NULL,\n" +
 					"location varchar(255) NOT NULL, \n" +
 					"zone_id int NOT NULL, \n" +
 					"latitude float NOT NULL, \n" +

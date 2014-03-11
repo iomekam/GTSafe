@@ -331,7 +331,7 @@ public class DBManager {
 		CrimeData data = null;
 
 		SQLiteDatabase db = instance.openDatabase();
-		String selectQuery = "SELECT crime_id, offense, location_code, location, zone_id,"
+		String selectQuery = "SELECT crime_id, offense, location, zone_id,"
 				+ "latitude, longitude, crime_date FROM crime_data WHERE crime_id= "
 				+ crimeID;
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -347,8 +347,8 @@ public class DBManager {
 						.getColumnIndex("crime_date")));
 
 				data = new CrimeData(location, c.getString(c
-						.getColumnIndex("location")), date, null, null,
-						getZone(c.getInt(c.getColumnIndex("zone_id"))));
+						.getColumnIndex("location")), date, OffenseType.RAPE.getOffenseType(c.getString(c.getColumnIndex("offense"))),
+						 	getZone(c.getInt(c.getColumnIndex("zone_id"))));
 			} catch (ParseException e) {
 				Log.e("Parse Exception", e.getMessage());
 			}

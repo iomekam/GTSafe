@@ -41,14 +41,12 @@ public class UpdateCrimeDataListener implements OnGetJSONListener
 				String date = object.getString("crime_date");
 				
 				String location = object.getString("location");
-				String locationCode = object.getString("location_code");
 				String offense = object.getString("offense");
 				double lat = object.getDouble("latitude");
 				double lon = object.getDouble("longitude");
 				
 				val.put("crime_id", crimeID);
 				val.put("offense", offense);
-				val.put("location_code", locationCode);
 				val.put("location", location);
 				val.put("zone_id", zoneID);
 				val.put("latitude", lat);
