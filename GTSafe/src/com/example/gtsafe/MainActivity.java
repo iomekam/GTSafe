@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private String s = "";
@@ -94,11 +95,13 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		db.getCrimesByDate(new Date(new GregorianCalendar(2010, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
+		db.getCrimesByDate(new Date(new GregorianCalendar(2013, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
 
 			@Override
 			public void OnGet(List<CrimeData> list) {
 				view.setText("Crimes by Date: " + list.size());
+				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
+						   Toast.LENGTH_LONG).show();
 			}
 		});
 		
@@ -144,8 +147,7 @@ public class MainActivity extends Activity {
 			        startActivity(myIntent);
 			        finish();
 			 }
-		});		
-				
+		});					
 	}
 	
 	@Override
