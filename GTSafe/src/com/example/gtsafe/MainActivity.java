@@ -124,7 +124,6 @@ public class MainActivity extends Activity {
 			 public void onClick(View v) {
 			        Intent myIntent=new Intent(view.getContext(),CrimeMapActivity.class);
 			        startActivity(myIntent);
-			        finish();
 			 }
 			 });
 		

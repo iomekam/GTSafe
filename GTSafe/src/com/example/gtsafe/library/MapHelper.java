@@ -62,6 +62,10 @@ public class MapHelper {
 		return this.map;
 	}
 	
+	public List<ZoneData> getZones(){
+		return zones;
+	}
+	
 	public GoogleMap populateCrimes(){
 		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
 

@@ -1,5 +1,7 @@
 package com.example.gtsafe;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,6 +17,7 @@ import android.widget.SlidingDrawer;
 import android.widget.Toast;
 
 import com.example.gtsafe.library.MapHelper;
+import com.example.gtsafe.model.ZoneData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -31,6 +34,7 @@ private SlidingDrawer slider;
 private Button filterButt;
 private LatLngBounds coords = new LatLngBounds(
     new LatLng(33.770836, -84.407272), new LatLng(33.786638, -84.390492));
+private List<ZoneData> zones;
 
 protected void onCreate(Bundle savedInstanceState) {
 
@@ -57,14 +61,29 @@ if (mMap == null) {
     helper = new MapHelper(mMap);
     mMap = helper.populateZones();
     mMap = helper.populateCrimes();
+    zones = helper.getZones();
     mMap.setOnMapClickListener(new OnMapClickListener() {
 
         @Override
         public void onMapClick(LatLng point) {
-            //Log.d("Map","Map clicked");
-            //marker.remove();
-            //drawMarker(point);
-        	
+            int i;
+            int j;
+            int result = -1;
+            boolean finished = false;
+            for (int x = 0; x < zones.size() && !finished; x++){
+	            for (i = 0, j = zones.get(x).getLocation().size() - 1; i < zones.get(x).getLocation().size(); j = i++) {
+	              if ((zones.get(x).getLocation().get(i).latitude > point.latitude) != (zones.get(x).getLocation().get(j).latitude > point.latitude) &&
+	                  (point.longitude < (zones.get(x).getLocation().get(j).longitude - zones.get(x).getLocation().get(i).longitude) * (point.latitude - zones.get(x).getLocation().get(i).latitude) / (zones.get(x).getLocation().get(j).latitude-zones.get(x).getLocation().get(i).latitude) +zones.get(x).getLocation().get(i).longitude)) {
+	                result = x;
+	                finished = true;
+	                break;
+	              }
+	            }
+            }
+            if(result!= -1){
+				Toast.makeText(getApplicationContext(), "Zone: " + result,
+						   Toast.LENGTH_LONG).show();
+            }
         }   
     }); 
 
