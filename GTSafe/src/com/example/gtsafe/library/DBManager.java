@@ -1,13 +1,22 @@
 package com.example.gtsafe.library;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.NameValuePair;
@@ -17,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,7 +59,10 @@ public class DBManager {
 	private static SQLiteOpenHelper dbHelper;
 	private SQLiteDatabase db;
 	private DBRequester request;
-
+	
+	private Hashtable<String, Object> table = new Hashtable<String, Object>();
+	private String FILENAME = "table.ht";
+	;
 	private OnDBUpdateListener zoneListener;
 	private OnDBUpdateListener allZoneListener;
 	private OnDBUpdateListener crimeDataListener;
@@ -63,11 +76,12 @@ public class DBManager {
 
 	private OnDBUpdateListener allCleryActListener;
 
-	public static synchronized void initializeInstance(SQLiteOpenHelper helper) {
+	public static synchronized void initializeInstance(SQLiteOpenHelper helper, Context context) {
 		if (instance == null) {
 			instance = new DBManager();
 			dbHelper = helper;
 			instance.db = dbHelper.getWritableDatabase();
+			instance.deserializeTable(context);
 		}
 	}
 
@@ -128,6 +142,58 @@ public class DBManager {
 
 		instance.closeDatabase();
 		return success;
+	}
+	
+	private void serializeTable(Context context)
+	{
+		FileOutputStream fos;
+		try 
+		{
+			fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(table);
+	        oos.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void deserializeTable(Context context)
+	{
+		FileInputStream fis;
+		try {
+			fis = context.openFileInput(FILENAME);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+	        table = (Hashtable<String, Object>)ois.readObject();
+	        ois.close();
+	        context.deleteFile(FILENAME);
+		} 
+		catch (FileNotFoundException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (StreamCorruptedException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void updateAllZones() {
@@ -331,7 +397,7 @@ public class DBManager {
 		CrimeData data = null;
 
 		SQLiteDatabase db = instance.openDatabase();
-		String selectQuery = "SELECT crime_id, offense, location, zone_id,"
+		String selectQuery = "SELECT crime_id, offense, offense_desc, location, zone_id,"
 				+ "latitude, longitude, crime_date FROM crime_data WHERE crime_id= "
 				+ crimeID;
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -348,7 +414,7 @@ public class DBManager {
 
 				data = new CrimeData(location, c.getString(c
 						.getColumnIndex("location")), date, OffenseType.RAPE.getOffenseType(c.getString(c.getColumnIndex("offense"))),
-						 	getZone(c.getInt(c.getColumnIndex("zone_id"))));
+						c.getString(c.getColumnIndex("offense_desc")), getZone(c.getInt(c.getColumnIndex("zone_id"))));
 			} catch (ParseException e) {
 				Log.e("Parse Exception", e.getMessage());
 			}

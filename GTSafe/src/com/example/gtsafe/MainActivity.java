@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		DBManager.initializeInstance(new DBHelper(getApplicationContext()));
+		DBManager.initializeInstance(new DBHelper(getApplicationContext()), this);
 		Context context = getApplicationContext();
 		view =  (TextView)findViewById(R.id.textView1);
 		view.setMovementMethod(new ScrollingMovementMethod());
