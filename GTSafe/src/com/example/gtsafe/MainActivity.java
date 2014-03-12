@@ -95,15 +95,15 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		db.getCrimesByDate(new Date(new GregorianCalendar(2013, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
-
-			@Override
-			public void OnGet(List<CrimeData> list) {
-				view.setText("Crimes by Date: " + list.size());
-				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
-						   Toast.LENGTH_LONG).show();
-			}
-		});
+//		db.getCrimesByDate(new Date(new GregorianCalendar(2013, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
+//
+//			@Override
+//			public void OnGet(List<CrimeData> list) {
+//				view.setText("Crimes by Date: " + list.size());
+//				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
+//						   Toast.LENGTH_LONG).show();
+//			}
+//		});
 		
 //		
 //		db.getCrimesByZone(1, new OnDBGetListener<CrimeData>(){
@@ -124,7 +124,6 @@ public class MainActivity extends Activity {
 			 public void onClick(View v) {
 			        Intent myIntent=new Intent(view.getContext(),CrimeMapActivity.class);
 			        startActivity(myIntent);
-			        finish();
 			 }
 			 });
 		

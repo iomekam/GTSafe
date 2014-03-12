@@ -60,7 +60,8 @@ public class DBManager {
 	private SQLiteDatabase db;
 	private DBRequester request;
 	
-	private Hashtable<String, Object> table = new Hashtable<String, Object>();
+	private Hashtable<String, List<CrimeData>> table = new Hashtable<String, List<CrimeData>>();
+	private Context context;
 	private String FILENAME = "table.ht";
 	;
 	private OnDBUpdateListener zoneListener;
@@ -144,7 +145,7 @@ public class DBManager {
 		return success;
 	}
 	
-	private void serializeTable(Context context)
+	private void serializeTable()
 	{
 		FileOutputStream fos;
 		try 
@@ -169,10 +170,12 @@ public class DBManager {
 	private void deserializeTable(Context context)
 	{
 		FileInputStream fis;
+		this.context = context;
+		
 		try {
 			fis = context.openFileInput(FILENAME);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-	        table = (Hashtable<String, Object>)ois.readObject();
+	        table = (Hashtable<String, List<CrimeData>>)ois.readObject();
 	        ois.close();
 	        context.deleteFile(FILENAME);
 		} 
@@ -427,32 +430,68 @@ public class DBManager {
 	}
 
 	public void getAllCrimeData(final OnDBGetListener<CrimeData> listener) {
-		new AsyncTask<Void, Void, List<CrimeData>>() {
-			@Override
-			protected List<CrimeData> doInBackground(Void... params) {
-				List<CrimeData> crimeList = new LinkedList<CrimeData>();
-
-				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data";
-				Cursor c = db.rawQuery(selectQuery, null);
-
-				boolean hasNext = c.moveToFirst();
-				while (hasNext) 
-				{
-					crimeList.add(getCrimeData(c.getInt(c.getColumnIndex("crime_id"))));
-					hasNext = c.moveToNext();
+		
+		if(table.containsKey("get_all_crime") && listener == null)
+		{
+			table.remove("get_all_crime");
+		}
+		
+		if(table.containsKey("get_all_crime"))
+		{
+			new AsyncTask<Void, Void, List<CrimeData>>() {
+				@SuppressWarnings("unchecked")
+				@Override
+				protected List<CrimeData> doInBackground(Void... params) {
+					return (List<CrimeData>)table.get("get_all_crime");
 				}
 
-				c.close();
-				instance.closeDatabase();
-
-				return crimeList;
-			}
-
-			public void onPostExecute(List<CrimeData> result) {
-				listener.OnGet(result);
-			}
-		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				public void onPostExecute(List<CrimeData> result) {
+					if(listener != null)
+					{
+						listener.OnGet(result);
+					}
+				}
+			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		}
+		else
+		{
+			new AsyncTask<Void, Void, List<CrimeData>>() {
+				@Override
+				protected List<CrimeData> doInBackground(Void... params) {
+					List<CrimeData> crimeList = new LinkedList<CrimeData>();
+	
+					SQLiteDatabase db = instance.openDatabase();
+					String selectQuery = "SELECT crime_id FROM crime_data";
+					Cursor c = db.rawQuery(selectQuery, null);
+	
+					boolean hasNext = c.moveToFirst();
+					while (hasNext) 
+					{
+						crimeList.add(getCrimeData(c.getInt(c.getColumnIndex("crime_id"))));
+						hasNext = c.moveToNext();
+					}
+	
+					c.close();
+					instance.closeDatabase();
+					
+					table.put("get_all_crime", crimeList);
+					instance.serializeTable();
+	
+					return crimeList;
+				}
+	
+				public void onPostExecute(List<CrimeData> result) {
+					if(listener != null)
+					{
+						listener.OnGet(result);
+					}
+					else
+					{
+						Log.e("Table:", "DONE");
+					}
+				}
+			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		}
 	}
 	
 	public CleryActModel getCleryAct(int caID)

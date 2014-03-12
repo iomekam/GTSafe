@@ -2,7 +2,7 @@ package com.example.gtsafe.model;
 
 import java.util.List;
 
-public class ZoneInfo {
+public class ZoneInfo implements java.io.Serializable {
 	private List<String> description;
 	
 	public ZoneInfo(List<String> description){
