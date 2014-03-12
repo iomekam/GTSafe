@@ -178,7 +178,6 @@ public class DBManager {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 	        table = (Hashtable<String, List<CrimeData>>)ois.readObject();
 	        ois.close();
-	        context.deleteFile(FILENAME);
 		} 
 		catch (FileNotFoundException e) 
 		{
