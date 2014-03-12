@@ -72,6 +72,7 @@ public class DBManager {
 	private OnDBUpdateListener allZoneInfoListener;
 	
 	private boolean useDefaultDB;
+	public boolean write = false;
 
 	private OnDBUpdateListener cleryActListener;
 
@@ -431,9 +432,10 @@ public class DBManager {
 
 	public void getAllCrimeData(final OnDBGetListener<CrimeData> listener) {
 		
-		if(table.containsKey("get_all_crime") && listener == null)
+		if(table.containsKey("get_all_crime") && write)
 		{
 			table.remove("get_all_crime");
+			write = false;
 		}
 		
 		if(table.containsKey("get_all_crime"))
@@ -567,7 +569,7 @@ public class DBManager {
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE Datetime(crime_date) >=  Datetime('" + date.toString() + "')";
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE crime_date BETWEEN '" + date.toString() + "' AND date('now')";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();
@@ -598,8 +600,39 @@ public class DBManager {
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE Datetime(crime_date) >=  Datetime('" + date.toString() + "')" +
-						"AND Datetime(crime_date) <= " + dateB.toString() + "')";
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE crime_date BETWEEN '" + date.toString() + "' AND '" 
+										+ dateB.toString() + "'";
+
+				Cursor c = db.rawQuery(selectQuery, null);
+				boolean hasNext = c.moveToFirst();
+
+				while (hasNext) {
+					dataList.add(getCrimeData(c.getInt(c
+							.getColumnIndex("crime_id"))));
+					hasNext = c.moveToNext();
+				}
+
+				c.close();
+				instance.closeDatabase();
+
+				return dataList;
+			}
+
+			public void onPostExecute(List<CrimeData> result) {
+				listener.OnGet(result);
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
+	
+	public void getCrimesByType(final OffenseType type, final OnDBGetListener<CrimeData> listener)
+	{
+		new AsyncTask<Void, Void, List<CrimeData>>() {
+			@Override
+			protected List<CrimeData> doInBackground(Void... arg0) {
+				List<CrimeData> dataList = new LinkedList<CrimeData>();
+
+				SQLiteDatabase db = instance.openDatabase();
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "'";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();

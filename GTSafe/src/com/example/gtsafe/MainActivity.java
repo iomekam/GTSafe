@@ -1,6 +1,7 @@
 package com.example.gtsafe;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.example.gtsafe.library.gcm.Gcm;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.model.CrimeData;
+import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 
 
@@ -95,15 +97,35 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-//		db.getCrimesByDate(new Date(new GregorianCalendar(2013, 5, 1).getTimeInMillis()), new OnDBGetListener<CrimeData>(){
-//
-//			@Override
-//			public void OnGet(List<CrimeData> list) {
-//				view.setText("Crimes by Date: " + list.size());
-//				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
-//						   Toast.LENGTH_LONG).show();
-//			}
-//		});
+		Calendar cal = Calendar.getInstance();
+		cal.set(cal.YEAR, 2013 );
+	    cal.set(cal.MONTH, cal.JULY );
+	    cal.set(cal.DATE, 28 );
+	    
+	    Calendar calB = Calendar.getInstance();
+		calB.set(cal.YEAR, 2014 );
+	    calB.set(cal.MONTH, cal.JANUARY );
+	    calB.set(cal.DATE, 5 );
+
+		db.getCrimesByDate(new java.sql.Date(cal.getTimeInMillis()), new java.sql.Date(calB.getTimeInMillis()),  new OnDBGetListener<CrimeData>(){
+
+			@Override
+			public void OnGet(List<CrimeData> list) {
+				view.setText("Crimes by Date: " + list.size());
+				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
+						   Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
+
+			@Override
+			public void OnGet(List<CrimeData> list) {
+				view.setText("Crimes by Type: " + list.size());
+				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
+						   Toast.LENGTH_LONG).show();
+			}
+		});
 		
 //		
 //		db.getCrimesByZone(1, new OnDBGetListener<CrimeData>(){
@@ -135,18 +157,8 @@ public class MainActivity extends Activity {
 			 public void onClick(View v) {
 			        Intent myIntent=new Intent(MainActivity.this,DataActivity.class);
 			        startActivity(myIntent);
-			        finish();
 			 }
-			 });
-		
-		((Button)findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
-			 @Override
-			 public void onClick(View v) {
-			        Intent myIntent=new Intent(view.getContext(),CleryActActivity.class);
-			        startActivity(myIntent);
-			        finish();
-			 }
-		});					
+			 });				
 	}
 	
 	@Override

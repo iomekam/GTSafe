@@ -72,6 +72,7 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 		
 		public void onPostExecute(Void result)
 		{
+			DBManager.getInstance().write = true;
 			DBManager.getInstance().getAllCrimeData(null);
 			if(listener != null)
 			{

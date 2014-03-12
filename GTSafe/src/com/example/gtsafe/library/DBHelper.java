@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper
 {
-	private final static int DB_VERSION = 6;
+	private final static int DB_VERSION = 1;
 	private final static String DB_NAME = "gtsafe.db";
 	
 	public DBHelper(Context context)
@@ -35,7 +35,7 @@ public class DBHelper extends SQLiteOpenHelper
 				"CREATE TABLE crime_data" +
 				"(" +
 					"crime_id INTEGER PRIMARY KEY NOT NULL,\n" +
-					"crime_date date NOT NULL," +
+					"crime_date DATETIME NOT NULL," +
 					"offense varchar(255) NOT NULL,\n" +
 					"offense_desc varchar(255) NOT NULL,\n" +
 					"location varchar(255) NOT NULL, \n" +

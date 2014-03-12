@@ -27,6 +27,7 @@ public class DataActivity extends TabActivity {
         // that will be opened when particular Tab will be selected
         tab1.setIndicator("Crime Alert");
         tab1.setContent(new Intent(this,CleryActActivity.class));
+        
 
         tab2.setIndicator("Crime Stat");
         tab2.setContent(new Intent(this,CrimeStatActivity.class));
