@@ -72,17 +72,57 @@ public class MapHelper {
 			@Override
 			public void OnGet(List<CrimeData> list) {
 				crimes = list;
-				for(int x = 0; x < crimes.size() /20; x++){
-					  Marker tempMarker = map.addMarker(new MarkerOptions()
-                      .position(crimes.get(x).getLocation())
-                      .title("Rape")
-                      .snippet(crimes.get(x).getLocationName())
-                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
-//					 Circle circle = map.addCircle(new CircleOptions()
-//				     .center(crimes.get(x).getLocation())
-//				     .radius(10)
-//				     .strokeColor(Color.RED)
-//				     .fillColor(Color.BLUE));
+				for(int x = 0; x < crimes.size(); x++){
+					if(crimes.get(x).getOffense().getName() == crimes.get(x).getOffense().getOffenseType("AGG ASSULT").toString()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.assult)));
+					}
+					else if(crimes.get(x).getOffense().getName() == crimes.get(x).getOffense().getOffenseType("BURGLARY").toString()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.burglary)));
+					}
+					else if(crimes.get(x).getOffense().getName() == crimes.get(x).getOffense().getOffenseType("LARCENY").toString()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.larceny)));
+					}
+					else if(crimes.get(x).getOffense().getName() == crimes.get(x).getOffense().getOffenseType("AUTO THEFT").toString()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.motorvehicle)));
+					}
+					else if(crimes.get(x).getOffense().getName() == crimes.get(x).getOffense().getOffenseType("HOMICIDE").toString()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.murder)));
+					}
+					else if(crimes.get(x).getOffense().getPart() == crimes.get(x).getOffense().getOffenseType("RAPE").getPart()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
+					}
+					else if(crimes.get(x).getOffense().getName() == crimes.get(x).getOffense().getOffenseType("ROBBERY").toString()){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.robbery)));
+					}
+
 				}
 			}
 		});
