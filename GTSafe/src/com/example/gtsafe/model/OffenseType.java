@@ -37,6 +37,11 @@ public enum OffenseType
 		return part;
 	}
 	
+	public String getName()
+	{
+		return name;
+	}
+	
 	public String toString()
 	{
 		return name;
