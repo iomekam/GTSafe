@@ -685,57 +685,57 @@ public class DBManager {
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 	
-	public void getCrimeTypeByMonth(final OffenseType type, final OnDBGetListener<List<CrimeData>> listener)
-	{
-		new AsyncTask<Void, Void, List<List<CrimeData>>>() {
-			@SuppressWarnings("deprecation")
-			@Override
-			protected List<List<CrimeData>> doInBackground(Void... arg0) {
-				
-				List<List<CrimeData>> superList = new LinkedList<List<CrimeData>>();
-				List<CrimeData> dataList = new LinkedList<CrimeData>();
-						
-				SQLiteDatabase db = instance.openDatabase();
-				
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-						Locale.US);
-				Date date = null;
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "'";
-				
-				int currentMonth = 1;
-
-				Cursor c = db.rawQuery(selectQuery, null);
-				boolean hasNext = c.moveToFirst();
-
-				while (hasNext) {
-					try 
-					{
-						date = format.parse(c.getString(c.getColumnIndex("crime_date")));
-						
-						if(date.getMonth() > currentMonth)
-						{
-							superList.add(dataList);
-							dataList = new LinkedList<CrimeData>();
-							currentMonth++;
-						}
-						
-						dataList.add(getCrimeData(c.getInt(c
-								.getColumnIndex("crime_id"))));
-					} 
-					catch (ParseException e) {}
-					
-					hasNext = c.moveToNext();
-				}
-
-				c.close();
-				instance.closeDatabase();
-
-				return superList;
-			}
-
-			public void onPostExecute(List<List<CrimeData>> result) {
-				listener.OnGet(result);
-			}
-		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+//	public void getCrimeTypeByMonth(final OffenseType type, final OnDBGetListener<List<CrimeData>> listener)
+//	{
+//		new AsyncTask<Void, Void, List<List<CrimeData>>>() {
+//			@SuppressWarnings("deprecation")
+//			@Override
+//			protected List<List<CrimeData>> doInBackground(Void... arg0) {
+//				
+//				List<List<CrimeData>> superList = new LinkedList<List<CrimeData>>();
+//				List<CrimeData> dataList = new LinkedList<CrimeData>();
+//						
+//				SQLiteDatabase db = instance.openDatabase();
+//				
+//				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+//						Locale.US);
+//				Date date = null;
+//				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "'";
+//				
+//				int currentMonth = 1;
+//
+//				Cursor c = db.rawQuery(selectQuery, null);
+//				boolean hasNext = c.moveToFirst();
+//
+//				while (hasNext) {
+//					try 
+//					{
+//						date = format.parse(c.getString(c.getColumnIndex("crime_date")));
+//						
+//						if(date.getMonth() > currentMonth)
+//						{
+//							superList.add(dataList);
+//							dataList = new LinkedList<CrimeData>();
+//							currentMonth++;
+//						}
+//						
+//						dataList.add(getCrimeData(c.getInt(c
+//								.getColumnIndex("crime_id"))));
+//					} 
+//					catch (ParseException e) {}
+//					
+//					hasNext = c.moveToNext();
+//				}
+//
+//				c.close();
+//				instance.closeDatabase();
+//
+//				return superList;
+//			}
+//
+//			public void onPostExecute(List<List<CrimeData>> result) {
+//				listener.OnGet(result);
+//			}
+//		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//	}
 }
