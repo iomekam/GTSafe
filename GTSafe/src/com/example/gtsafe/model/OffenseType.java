@@ -8,7 +8,7 @@ public enum OffenseType
 	WEAPONS_OFFENSE("WEAPONS OFFENSE", 2), PROSTITUTION("PROSTITUTION", 2), SEX_OFFENSE("SEX OFFENSE", 2), DANGEROUS_DRUGS("DANGEROUS DRUGS", 2), 
 	GAMBLING_OFFENSE("GAMBLING OFFENSE", 2), FAMILY_OFFENSE("FAMILY OFFENSE", 2), DUI("DUI", 2), LIQUOR_LAWS("LIQUOR LAWS", 2), 
 	PUBLIC_PEACE_OFFENSE("PUBLIC PEACE OFFENSE", 2), VAGRANCY_OFFENSE("VAGRANCY OFFENSE", 2), ALL_OTHER_OFFENSES("ALL OTHER OFFENSES", 2), 
-	NO_CRIME("NO_CRIME", 2);
+	NO_CRIME("NO_CRIME", 2), NON_CRIME("NON CRIME", 3);
 	
 	private String name;
 	private int part;
@@ -35,6 +35,11 @@ public enum OffenseType
 	public int getPart()
 	{
 		return part;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public String toString()

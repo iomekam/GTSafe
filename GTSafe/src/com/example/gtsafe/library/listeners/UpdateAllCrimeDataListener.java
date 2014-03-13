@@ -49,11 +49,13 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 					
 					String location = object.getString("location");
 					String offense = object.getString("offense");
+					String offenseDesc = object.getString("off_desc");
 					double lat = object.getDouble("latitude");
 					double lon = object.getDouble("longitude");
 					
 					val.put("crime_id", crimeID);
 					val.put("offense", offense);
+					val.put("offense_desc", offenseDesc);
 					val.put("location", location);
 					val.put("zone_id", zoneID);
 					val.put("latitude", lat);
@@ -70,6 +72,8 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 		
 		public void onPostExecute(Void result)
 		{
+			DBManager.getInstance().write = true;
+			DBManager.getInstance().getAllCrimeData(null);
 			if(listener != null)
 			{
 				listener.OnUpdate();
