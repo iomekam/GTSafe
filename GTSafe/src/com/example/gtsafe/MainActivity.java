@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
 	private TextView view;
 	private Button view_Button;
 	private Button data_Button;
+	private Button help_Button; // Omar created this.
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +148,16 @@ public class MainActivity extends Activity {
 			        startActivity(myIntent);
 			        finish();
 			 }
-		});					
+		});	
+		
+		help_Button = (Button)findViewById(R.id.help);
+		help_Button.setOnClickListener(new View.OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+			        Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
+			        startActivity(myIntent);
+			 }
+			 });
 	}
 	
 	@Override
