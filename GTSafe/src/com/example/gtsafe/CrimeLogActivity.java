@@ -13,13 +13,18 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class CrimeLogActivity extends Activity {
+public class CrimeLogActivity extends Activity{
 
 	ListView crimes;
+	TextView searchCrimes;
+	CharSequence result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class CrimeLogActivity extends Activity {
 		crimes = (ListView) findViewById(R.id.crimeLog);
 		final ArrayList<String> crimeDataHolder = new ArrayList<String>();
 		final DBManager db = DBManager.getInstance();
+
 		// were gonna start of the list view with all of the crime data
 		db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
 			@Override
@@ -37,34 +43,16 @@ public class CrimeLogActivity extends Activity {
 				for (int i = 0; i < list.size(); i++) {
 					crimeDataHolder.add(list.get(i).toString());
 				}
-				
+
 				adapter = new ArrayAdapter<String>(CrimeLogActivity.this,
-						android.R.layout.simple_list_item_1, android.R.id.text1,
-						crimeDataHolder);
-				
+						android.R.layout.simple_list_item_1,
+						android.R.id.text1, crimeDataHolder);
+
 				crimes.setAdapter(adapter);
+				crimes.setTextFilterEnabled(true);
+				//crimes.setFilterText((String) result);
 			}
 		});
-
-		/*crimes.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// ListView Clicked item index
-				int itemPosition = position;
-
-				// ListView Clicked item value
-				String itemValue = (String) crimes
-						.getItemAtPosition(position);
-
-				// Show Alert
-				Toast.makeText(
-						getApplicationContext(),
-						"Position :" + itemPosition + "  ListItem : "
-								+ itemValue, Toast.LENGTH_LONG).show();
-			}
-		});*/
 
 	}
 
@@ -74,5 +62,8 @@ public class CrimeLogActivity extends Activity {
 		getMenuInflater().inflate(R.menu.crime_log, menu);
 		return true;
 	}
+
+	
+
 
 }

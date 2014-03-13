@@ -10,5 +10,6 @@
     <string name="title_activity_data">DataActivity</string>
     <string name="title_activity_crime_stat">CrimeStatActivity</string>
     <string name="title_activity_crime_log">CrimeLogActivity</string>
+    <string name="Filter by Date or Crime Type">FilterDateorCrime</string>
 
 </resources>

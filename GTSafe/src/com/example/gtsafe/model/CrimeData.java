@@ -42,6 +42,6 @@ public class CrimeData
 	}
 	
 	public String toString(){
-		return   "Crime Date "+date.toString();
+		return date.toString();
 	}
 }
