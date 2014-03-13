@@ -267,7 +267,7 @@ containing a value of this type.
         public static final int map=0x7f0b0006;
     }
     public static final class string {
-        public static final int Filter by Date or Crime Type=0x7f070023;
+        public static final int Filter_by_Date_or_Crime_Type=0x7f070023;
         public static final int action_settings=0x7f07001b;
         public static final int app_name=0x7f07001a;
         /**   Title for notification shown when GooglePlayServices needs to be

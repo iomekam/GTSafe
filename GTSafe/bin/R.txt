@@ -106,7 +106,7 @@ int menu data 0x7f0b0003
 int menu main 0x7f0b0004
 int menu main_activity2 0x7f0b0005
 int menu map 0x7f0b0006
-int string Filter by Date or Crime Type 0x7f070023
+int string Filter_by_Date_or_Crime_Type 0x7f070023
 int string action_settings 0x7f07001b
 int string app_name 0x7f07001a
 int string auth_client_needs_enabling_title 0x7f070015

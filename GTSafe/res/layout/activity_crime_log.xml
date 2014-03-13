@@ -12,7 +12,7 @@
             android:id="@+id/filterDate"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:hint="@string/Filter by Date or Crime Type" />
+            android:hint="@string/Filter_by_Date_or_Crime_Type" />
 
     </LinearLayout>
     <ListView 
