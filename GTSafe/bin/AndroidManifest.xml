@@ -21,7 +21,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!--
      The following two permissions are not required to use
-     Google Maps Android API v2, but are recommended.
+     Google Maps Android API v2, but are recommended.
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -95,6 +95,10 @@
         <activity
             android:name="com.example.gtsafe.CrimeLogActivity"
             android:label="@string/title_activity_crime_log" >
+        </activity>
+        <activity
+            android:name="com.example.gtsafe.SingleListItem"
+            android:label="@string/title_activity_single_list_item" >
         </activity>
     </application>
 

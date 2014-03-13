@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Clery_Acts">
+        <item>Clery Act 1</item>
+        <item>Clery Act 2</item>
+        <item>Clery Act 3</item>
+        <item>Clery Act 4</item>
+        <item>Clery Act 5</item>
+        <item>Clery Act 6</item>
+        <item>Clery Act 7</item>
+        <item>Clery Act 8</item>
+        <item>Clery Act 9</item>
+        <item>Clery Act 10</item>
+    </string-array>
+    
+</resources>

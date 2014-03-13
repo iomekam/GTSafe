@@ -8,6 +8,9 @@
 package com.example.gtsafe;
 
 public final class R {
+    public static final class array {
+        public static final int Clery_Acts=0x7f0a0000;
+    }
     public static final class attr {
         /** 
     The size of the ad. It must be one of BANNER, FULL_BANNER, LEADERBOARD,
@@ -225,8 +228,8 @@ containing a value of this type.
     }
     public static final class id {
         public static final int LinearLayout01=0x7f060008;
-        public static final int action_settings=0x7f060011;
-        public static final int cleryActView=0x7f060005;
+        public static final int action_settings=0x7f060012;
+        public static final int cleryact=0x7f060005;
         public static final int content=0x7f06000e;
         public static final int crimeLog=0x7f060006;
         public static final int data_button2=0x7f06000b;
@@ -242,6 +245,7 @@ containing a value of this type.
         public static final int slidingDrawer1=0x7f06000d;
         public static final int terrain=0x7f060003;
         public static final int textView1=0x7f060009;
+        public static final int webView1=0x7f060011;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f080000;
@@ -253,15 +257,17 @@ containing a value of this type.
         public static final int activity_data=0x7f030003;
         public static final int activity_main=0x7f030004;
         public static final int activity_map=0x7f030005;
+        public static final int activity_single_list_item=0x7f030006;
     }
     public static final class menu {
-        public static final int clery_act=0x7f0b0000;
-        public static final int crime_log=0x7f0b0001;
-        public static final int crime_stat=0x7f0b0002;
-        public static final int data=0x7f0b0003;
-        public static final int main=0x7f0b0004;
-        public static final int main_activity2=0x7f0b0005;
-        public static final int map=0x7f0b0006;
+        public static final int clery_act=0x7f0c0000;
+        public static final int crime_log=0x7f0c0001;
+        public static final int crime_stat=0x7f0c0002;
+        public static final int data=0x7f0c0003;
+        public static final int main=0x7f0c0004;
+        public static final int main_activity2=0x7f0c0005;
+        public static final int map=0x7f0c0006;
+        public static final int single_list_item=0x7f0c0007;
     }
     public static final class string {
         public static final int action_settings=0x7f07001b;
@@ -367,6 +373,7 @@ containing a value of this type.
         public static final int title_activity_data=0x7f070020;
         public static final int title_activity_main_activity2=0x7f07001f;
         public static final int title_activity_map=0x7f07001d;
+        public static final int title_activity_single_list_item=0x7f070023;
     }
     public static final class style {
         /** 
@@ -390,11 +397,11 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0a0000;
+        public static final int AppBaseTheme=0x7f0b0000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f0a0001;
+        public static final int AppTheme=0x7f0b0001;
     }
     public static final class xml {
         public static final int line_point_formatter_with_plf1=0x7f040000;
