@@ -1,14 +1,17 @@
 package com.example.gtsafe.library;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.example.gtsafe.R;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.model.CrimeData;
+import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 import com.example.gtsafe.model.ZoneInfo;
 import com.google.android.gms.maps.GoogleMap;
@@ -62,23 +65,82 @@ public class MapHelper {
 		return this.map;
 	}
 	
+	public List<ZoneData> getZones(){
+		return zones;
+	}
+	
 	public GoogleMap populateCrimes(){
-		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
-
+		int days = 14;
+	    Calendar currCal = Calendar.getInstance();
+	    currCal.add(Calendar.DATE, -1 * days);
+	    Log.e("DATE", new java.sql.Date(currCal.getTimeInMillis()).toString());
+	    db.getCrimesByDate(new java.sql.Date(currCal.getTimeInMillis()), new OnDBGetListener<CrimeData>(){
 			@Override
 			public void OnGet(List<CrimeData> list) {
 				crimes = list;
-				for(int x = 0; x < crimes.size() /20; x++){
-					  Marker tempMarker = map.addMarker(new MarkerOptions()
-                      .position(crimes.get(x).getLocation())
-                      .title("Rape")
-                      .snippet(crimes.get(x).getLocationName())
-                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
-//					 Circle circle = map.addCircle(new CircleOptions()
-//				     .center(crimes.get(x).getLocation())
-//				     .radius(10)
-//				     .strokeColor(Color.RED)
-//				     .fillColor(Color.BLUE));
+				for(int x = 0; x < crimes.size(); x++){
+					if(crimes.get(x).getOffense() == OffenseType.AGG_ASSAULT){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.assult)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.BURGLARY){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.burglary)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.LARCENY){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.larceny)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.AUTO_THEFT){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.motorvehicle)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.HOMICIDE){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.murder)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.RAPE){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.ROBBERY){
+						  Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.robbery)));
+					}
+					else if(crimes.get(x).getOffense() == OffenseType.NON_CRIME){
+						Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
+					}
+					else{
+						Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName()));
+					}
 				}
 			}
 		});

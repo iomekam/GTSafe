@@ -1186,8 +1186,10 @@ containing a value of this type.
         public static final int larceny=0x7f02007a;
         public static final int motorvehicle=0x7f02007b;
         public static final int murder=0x7f02007c;
-        public static final int rape=0x7f02007d;
-        public static final int robbery=0x7f02007e;
+        public static final int noncrime=0x7f02007d;
+        public static final int part2=0x7f02007e;
+        public static final int rape=0x7f02007f;
+        public static final int robbery=0x7f020080;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f060042;
@@ -1202,7 +1204,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060027;
-        public static final int action_settings=0x7f060050;
+        public static final int action_settings=0x7f060051;
         public static final int activity_chooser_view_content=0x7f060028;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
@@ -1214,6 +1216,7 @@ containing a value of this type.
         public static final int collapseActionView=0x7f06000d;
         public static final int content=0x7f06004d;
         public static final int crimeLog=0x7f060040;
+        public static final int currDate=0x7f060050;
         public static final int data_button2=0x7f060048;
         public static final int default_activity_button=0x7f06002b;
         public static final int dialog=0x7f06000e;

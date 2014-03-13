@@ -1,5 +1,8 @@
 package com.example.gtsafe;
 
+import java.util.Calendar;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,13 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SlidingDrawer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gtsafe.library.MapHelper;
+import com.example.gtsafe.model.ZoneData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polygon;
@@ -31,6 +38,8 @@ private SlidingDrawer slider;
 private Button filterButt;
 private LatLngBounds coords = new LatLngBounds(
     new LatLng(33.770836, -84.407272), new LatLng(33.786638, -84.390492));
+private List<ZoneData> zones;
+private TextView date;
 
 protected void onCreate(Bundle savedInstanceState) {
 
@@ -57,17 +66,48 @@ if (mMap == null) {
     helper = new MapHelper(mMap);
     mMap = helper.populateZones();
     mMap = helper.populateCrimes();
+    zones = helper.getZones();
+	int days = 14;
+    Calendar currCal = Calendar.getInstance();
+    currCal.add(Calendar.DATE, -1 * days);
+    date = (TextView)findViewById(R.id.currDate);
+    date.setText("Date Range: " + (new java.sql.Date(currCal.getTimeInMillis()).toString()) + " - Today");
     mMap.setOnMapClickListener(new OnMapClickListener() {
-
         @Override
         public void onMapClick(LatLng point) {
-            //Log.d("Map","Map clicked");
-            //marker.remove();
-            //drawMarker(point);
-        	
+            int i;
+            int j;
+            int result = -1;
+            boolean finished = false;
+            for (int x = 0; x < zones.size() && !finished; x++){
+	            for (i = 0, j = zones.get(x).getLocation().size() - 1; i < zones.get(x).getLocation().size(); j = i++) {
+	              if ((zones.get(x).getLocation().get(i).latitude > point.latitude) != (zones.get(x).getLocation().get(j).latitude > point.latitude) &&
+	                  (point.longitude < (zones.get(x).getLocation().get(j).longitude - zones.get(x).getLocation().get(i).longitude) * (point.latitude - zones.get(x).getLocation().get(i).latitude) / (zones.get(x).getLocation().get(j).latitude-zones.get(x).getLocation().get(i).latitude) +zones.get(x).getLocation().get(i).longitude)) {
+	                result = x;
+	                finished = true;
+	                break;
+	              }
+	            }
+            }
+            if(result!= -1){
+				Toast.makeText(getApplicationContext(), "Zone: " + result,
+						   Toast.LENGTH_LONG).show();
+            }
         }   
     }); 
 
+    mMap.setOnCameraChangeListener(new OnCameraChangeListener(){
+
+		@Override
+		public void onCameraChange(CameraPosition pos) {
+			// TODO Auto-generated method stub
+			if (pos.zoom < 15){
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos.target, 15));
+			}
+			
+		}
+    	
+    });
     if ( mMap == null) {
         Toast.makeText(getApplicationContext(),
                  "Sorry! unable to create maps", Toast.LENGTH_SHORT)
@@ -91,6 +131,4 @@ protected void onResume() {
 super.onResume();
 initilizeMap();
 }
-
-
 }
