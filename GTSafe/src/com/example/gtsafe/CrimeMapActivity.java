@@ -90,7 +90,7 @@ if (mMap == null) {
 
             // Getting reference to the TextView to set longitude
             //TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
-
+  
             // Setting the latitude
             //tvLat.setText("Latitude:");
 

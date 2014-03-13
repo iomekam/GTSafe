@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 	private TextView view;
 	private Button view_Button;
 	private Button data_Button;
+	private Button help_Button; // Omar created this.
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +103,6 @@ public class MainActivity extends Activity {
 	    cal.set(cal.MONTH, cal.JULY );
 	    cal.set(cal.DATE, 28 );
 	    
-	   
-	    
 	    Calendar calB = Calendar.getInstance();
 		calB.set(cal.YEAR, 2014 );
 	    calB.set(cal.MONTH, cal.JANUARY );
@@ -160,7 +159,25 @@ public class MainActivity extends Activity {
 			        Intent myIntent=new Intent(MainActivity.this,DataActivity.class);
 			        startActivity(myIntent);
 			 }
-			 });				
+			 });
+		
+		((Button)findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+			        Intent myIntent=new Intent(view.getContext(),CleryActActivity.class);
+			        startActivity(myIntent);
+			        finish();
+			 }
+		});	
+		
+		help_Button = (Button)findViewById(R.id.help);
+		help_Button.setOnClickListener(new View.OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+			        Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
+			        startActivity(myIntent);
+			 }
+			 });
 	}
 	
 	@Override
