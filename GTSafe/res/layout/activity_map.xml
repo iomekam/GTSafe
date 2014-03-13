@@ -34,4 +34,13 @@
             android:text="Try this on for size" />
         </LinearLayout>
     </SlidingDrawer>
+
+    <TextView
+        android:id="@+id/currDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Current Date:" />
+
 </RelativeLayout>

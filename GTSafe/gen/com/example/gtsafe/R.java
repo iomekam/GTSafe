@@ -225,10 +225,11 @@ containing a value of this type.
     }
     public static final class id {
         public static final int LinearLayout01=0x7f060008;
-        public static final int action_settings=0x7f060011;
+        public static final int action_settings=0x7f060012;
         public static final int cleryActView=0x7f060005;
         public static final int content=0x7f06000e;
         public static final int crimeLog=0x7f060006;
+        public static final int currDate=0x7f060011;
         public static final int data_button2=0x7f06000b;
         public static final int handle=0x7f06000f;
         public static final int hybrid=0x7f060004;
