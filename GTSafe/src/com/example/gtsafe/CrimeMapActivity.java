@@ -22,12 +22,14 @@ import com.example.gtsafe.library.MapHelper;
 import com.example.gtsafe.model.ZoneData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -60,12 +62,47 @@ try {
 
 private void initilizeMap() {
 if (mMap == null) {
-    mMap = ((MapFragment) getFragmentManager().findFragmentById(
-            R.id.map)).getMap();
+    mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
     mMap.setMyLocationEnabled(true);
     helper = new MapHelper(mMap);
     mMap = helper.populateZones();
     mMap = helper.populateCrimes();
+    mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
+    	 
+        // Use default InfoWindow frame
+        @Override
+        public View getInfoWindow(Marker arg0) {
+            return null;
+        }
+
+        // Defines the contents of the InfoWindow
+        @Override
+        public View getInfoContents(Marker arg0) {
+
+            // Getting view from the layout file info_window_layout
+            //View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+
+            // Getting the position from the marker
+            LatLng latLng = arg0.getPosition();
+
+            // Getting reference to the TextView to set latitude
+            //TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
+
+            // Getting reference to the TextView to set longitude
+            //TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
+
+            // Setting the latitude
+            //tvLat.setText("Latitude:");
+
+            // Setting the longitude
+            //tvLng.setText("Longitude:");
+
+            // Returning the view containing InfoWindow contents
+            //return v;
+
+        }
+    });
+    
     zones = helper.getZones();
 	int days = 14;
     Calendar currCal = Calendar.getInstance();
@@ -101,8 +138,8 @@ if (mMap == null) {
 		@Override
 		public void onCameraChange(CameraPosition pos) {
 			// TODO Auto-generated method stub
-			if (pos.zoom < 15){
-				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos.target, 15));
+			if (pos.zoom < 17){
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos.target, 17));
 			}
 			
 		}
@@ -113,10 +150,10 @@ if (mMap == null) {
                  "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                  .show();
     }
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 15));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 17));
 }
     else{
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 15));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 17));
 }
 	filterButt = (Button)findViewById(R.id.ok);
 	filterButt.setOnClickListener(new View.OnClickListener() {
