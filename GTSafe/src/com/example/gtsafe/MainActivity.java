@@ -1,9 +1,18 @@
 package com.example.gtsafe;
 
-import java.sql.Date;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gtsafe.library.DBHelper;
 import com.example.gtsafe.library.DBManager;
@@ -13,19 +22,6 @@ import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
-
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private String s = "";
@@ -97,14 +93,14 @@ public class MainActivity extends Activity {
 		});
 		
 		Calendar cal = Calendar.getInstance();//gives current date at given time
-		cal.set(cal.YEAR, 2013 );
-	    cal.set(cal.MONTH, cal.JULY );
-	    cal.set(cal.DATE, 28 );
+		cal.set(Calendar.YEAR, 2013 );
+	    cal.set(Calendar.MONTH, Calendar.JULY );
+	    cal.set(Calendar.DATE, 28 );
 	    
 	    Calendar calB = Calendar.getInstance();
-		calB.set(cal.YEAR, 2014 );
-	    calB.set(cal.MONTH, cal.JANUARY );
-	    calB.set(cal.DATE, 5 );
+		calB.set(Calendar.YEAR, 2014 );
+	    calB.set(Calendar.MONTH, Calendar.JANUARY );
+	    calB.set(Calendar.DATE, 5 );
 
 		db.getCrimesByDate(new java.sql.Date(cal.getTimeInMillis()), new java.sql.Date(calB.getTimeInMillis()),  new OnDBGetListener<CrimeData>(){
 

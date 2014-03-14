@@ -3,16 +3,18 @@ package com.example.gtsafe.model;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.util.Pair;
-
+import com.example.gtsafe.library.listeners.interfaces.Listable;
 import com.google.android.gms.maps.model.LatLng;
 
-public class ZoneData implements java.io.Serializable
+public class ZoneData implements java.io.Serializable, Listable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2909370489314249159L;
 	private transient List<LatLng> location;
 	private int zoneID;
 	ZoneInfo zInfo;
@@ -48,7 +50,6 @@ public class ZoneData implements java.io.Serializable
         }
     }
 
-    @SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         int size = in.readInt();
@@ -63,4 +64,9 @@ public class ZoneData implements java.io.Serializable
         location = locList;
         
     }
+
+	@Override
+	public String listString() {
+		return "" + zoneID;
+	}
 }

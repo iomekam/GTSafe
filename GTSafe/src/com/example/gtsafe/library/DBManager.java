@@ -16,7 +16,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.NameValuePair;
@@ -46,7 +45,6 @@ import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.model.CleryActModel;
 import com.example.gtsafe.model.CrimeData;
-import com.example.gtsafe.model.LocationCode;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 import com.example.gtsafe.model.ZoneInfo;
@@ -64,19 +62,19 @@ public class DBManager {
 	private Context context;
 	private String FILENAME = "table.ht";
 	;
-	private OnDBUpdateListener zoneListener;
-	private OnDBUpdateListener allZoneListener;
-	private OnDBUpdateListener crimeDataListener;
-	private OnDBUpdateListener allCrimeDataListener;
-	private OnDBUpdateListener zoneInfoListener;
-	private OnDBUpdateListener allZoneInfoListener;
+	private OnDBUpdateListener<ZoneData> zoneListener;
+	private OnDBUpdateListener<List<ZoneData>> allZoneListener;
+	private OnDBUpdateListener<CrimeData> crimeDataListener;
+	private OnDBUpdateListener<List<CrimeData>> allCrimeDataListener;
+	private OnDBUpdateListener<ZoneInfo> zoneInfoListener;
+	private OnDBUpdateListener<List<ZoneInfo>> allZoneInfoListener;
 	
 	private boolean useDefaultDB;
 	public boolean write = false;
 
-	private OnDBUpdateListener cleryActListener;
+	private OnDBUpdateListener<CleryActModel> cleryActListener;
 
-	private OnDBUpdateListener allCleryActListener;
+	private OnDBUpdateListener<List<CleryActModel>> allCleryActListener;
 
 	public static synchronized void initializeInstance(SQLiteOpenHelper helper, Context context) {
 		if (instance == null) {
@@ -211,7 +209,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 
-	public void setOnAllZoneUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnAllZoneUpdateEventListener(OnDBUpdateListener<List<ZoneData>> listener) {
 		this.allZoneListener = listener;
 	}
 
@@ -225,7 +223,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 
-	public void setOnZoneUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnZoneUpdateEventListener(OnDBUpdateListener<ZoneData> listener) {
 		this.zoneListener = listener;
 	}
 	
@@ -241,7 +239,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 	
-	public void setOnZoneInfoUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnZoneInfoUpdateEventListener(OnDBUpdateListener<ZoneInfo> listener) {
 		this.zoneInfoListener = listener;
 	}
 	
@@ -254,7 +252,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 
-	public void setOnAllZoneInfoUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnAllZoneInfoUpdateEventListener(OnDBUpdateListener<List<ZoneInfo>> listener) {
 		this.allZoneInfoListener = listener;
 	}
 	
@@ -270,7 +268,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 	
-	public void setOnCleryActUpdateListener(OnDBUpdateListener listener)
+	public void setOnCleryActUpdateListener(OnDBUpdateListener<CleryActModel> listener)
 	{
 		this.cleryActListener = listener;
 	}
@@ -284,7 +282,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 
-	public void setOnAllCleryActUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnAllCleryActUpdateEventListener(OnDBUpdateListener<List<CleryActModel>> listener) {
 		this.allCleryActListener = listener;
 	}
 
@@ -299,7 +297,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 
-	public void setOnCrimeUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnCrimeUpdateEventListener(OnDBUpdateListener<CrimeData> listener) {
 		this.crimeDataListener = listener;
 	}
 
@@ -315,7 +313,7 @@ public class DBManager {
 		request.getJSON(params);
 	}
 
-	public void setOnAllCrimeUpdateEventListener(OnDBUpdateListener listener) {
+	public void setOnAllCrimeUpdateEventListener(OnDBUpdateListener<List<CrimeData>> listener) {
 		this.allCrimeDataListener = listener;
 	}
 
@@ -440,7 +438,6 @@ public class DBManager {
 		if(table.containsKey("get_all_crime"))
 		{
 			new AsyncTask<Void, Void, List<CrimeData>>() {
-				@SuppressWarnings("unchecked")
 				@Override
 				protected List<CrimeData> doInBackground(Void... params) {
 					return (List<CrimeData>)table.get("get_all_crime");

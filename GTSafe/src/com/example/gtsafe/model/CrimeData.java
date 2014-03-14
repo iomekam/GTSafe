@@ -5,9 +5,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
+import com.example.gtsafe.library.listeners.interfaces.Listable;
 import com.google.android.gms.maps.model.LatLng;
 
-public class CrimeData implements java.io.Serializable
+public class CrimeData implements java.io.Serializable, Listable
 {
 	/**
 	 * 
@@ -55,8 +56,9 @@ public class CrimeData implements java.io.Serializable
 		return zone;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String toString(){
-		return "Crime Date "+date.toString();
+		return date.toLocaleString() + " -- " + getOffenseDescription();
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
@@ -69,4 +71,10 @@ public class CrimeData implements java.io.Serializable
         in.defaultReadObject();
         location = new LatLng(in.readDouble(), in.readDouble());
     }
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public String listString() {
+		return date.toLocaleString() + " -- " + getOffenseDescription();
+	}
 }
