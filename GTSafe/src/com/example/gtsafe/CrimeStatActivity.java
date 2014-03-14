@@ -43,8 +43,8 @@ public class CrimeStatActivity extends Activity {
 		});
 		// fun little snippet that prevents users from taking screenshots
         // on ICS+ devices :-)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                                 WindowManager.LayoutParams.FLAG_SECURE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                                // WindowManager.LayoutParams.FLAG_SECURE);
  
  
         // initialize our XYPlot reference:
