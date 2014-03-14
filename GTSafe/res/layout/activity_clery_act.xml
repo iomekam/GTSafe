@@ -8,9 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CleryActActivity" >
 
-    <WebView
-        android:id="@+id/cleryActView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <TextView
+    	android:id="@+id/cleryact"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:padding="10dip"
+        	android:textSize="16sp"
+        	android:textStyle="bold" >
+	</TextView>
 
 </RelativeLayout>

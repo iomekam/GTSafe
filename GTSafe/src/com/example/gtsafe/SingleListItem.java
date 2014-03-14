@@ -26,12 +26,4 @@ public class SingleListItem extends Activity {
 		WebView view = (WebView)findViewById(R.id.webView1);
 		view.loadData(model.getText(), "text/html", null);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.single_list_item, menu);
-		return true;
-	}
-
 }
