@@ -96,7 +96,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance();//gives current date at given time
 		cal.set(cal.YEAR, 2013 );
 	    cal.set(cal.MONTH, cal.JULY );
 	    cal.set(cal.DATE, 28 );
@@ -115,7 +115,6 @@ public class MainActivity extends Activity {
 						   Toast.LENGTH_LONG).show();
 			}
 		});
-		
 		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
 
 			@Override

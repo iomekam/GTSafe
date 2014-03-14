@@ -2,17 +2,24 @@ package com.example.gtsafe;
 
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.example.gtsafe.library.DBHelper;
+import com.example.gtsafe.library.DBManager;
+import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
+import com.example.gtsafe.model.CrimeData;
+import com.example.gtsafe.model.OffenseType;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 public class CrimeStatActivity extends Activity {
@@ -22,6 +29,18 @@ public class CrimeStatActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_stat);
+		DBManager.initializeInstance(new DBHelper(getApplicationContext()), this);
+		final DBManager db = DBManager.getInstance();
+		
+		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
+
+			@Override
+			public void OnGet(List<CrimeData> list) {
+				//view.setText("Crimes by Type: " + list.size());
+				//Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
+						   //Toast.LENGTH_LONG).show();
+			}
+		});
 		// fun little snippet that prevents users from taking screenshots
         // on ICS+ devices :-)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
