@@ -10,6 +10,10 @@
     <string name="title_activity_data">DataActivity</string>
     <string name="title_activity_crime_stat">CrimeStatActivity</string>
     <string name="title_activity_crime_log">CrimeLogActivity</string>
+<<<<<<< HEAD
     <string name="title_activity_single_list_item">SingleListItem</string>
+=======
+    <string name="title_activity_help">HelpActivity</string>
+>>>>>>> 35a1bee397b960cab978b92edc6547c37908a8e8
 
 </resources>
