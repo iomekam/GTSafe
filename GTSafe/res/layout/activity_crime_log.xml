@@ -3,16 +3,19 @@
     android:layout_width="fill_parent"  
     android:orientation="vertical"  
     android:id="@+id/layout1">
-    <LinearLayout   
-        android:orientation="horizontal" 
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="112dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
         
-        <EditText
+        <Spinner
             android:id="@+id/filterDate"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:hint="@string/Filter_by_Date_or_Crime_Type" />
+            android:prompt="@string/Filter_by_Date_or_Crime_Type" 
+            android:spinnerMode="dropdown"
+            />
 
     </LinearLayout>
     <ListView 

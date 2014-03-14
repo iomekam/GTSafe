@@ -56,7 +56,7 @@ public class CrimeData implements java.io.Serializable
 	}
 	
 	public String toString(){
-		return date.toString();
+		return offenseDesc.toString();
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
