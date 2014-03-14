@@ -162,8 +162,8 @@ public class MainActivity extends Activity {
 		help_Button.setOnClickListener(new View.OnClickListener() {
 			 @Override
 			 public void onClick(View v) {
-			        //Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
-			        //startActivity(myIntent);
+			        Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
+			        startActivity(myIntent);
 			 }
 			 });
 	}
