@@ -1,5 +1,6 @@
 package com.example.gtsafe;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,14 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SlidingDrawer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gtsafe.library.MapHelper;
 import com.example.gtsafe.model.ZoneData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polygon;
@@ -35,6 +39,7 @@ private Button filterButt;
 private LatLngBounds coords = new LatLngBounds(
     new LatLng(33.770836, -84.407272), new LatLng(33.786638, -84.390492));
 private List<ZoneData> zones;
+private TextView date;
 
 protected void onCreate(Bundle savedInstanceState) {
 
@@ -62,8 +67,12 @@ if (mMap == null) {
     mMap = helper.populateZones();
     mMap = helper.populateCrimes();
     zones = helper.getZones();
+	int days = 14;
+    Calendar currCal = Calendar.getInstance();
+    currCal.add(Calendar.DATE, -1 * days);
+    date = (TextView)findViewById(R.id.currDate);
+    date.setText("Date Range: " + (new java.sql.Date(currCal.getTimeInMillis()).toString()) + " - Today");
     mMap.setOnMapClickListener(new OnMapClickListener() {
-
         @Override
         public void onMapClick(LatLng point) {
             int i;
@@ -87,6 +96,18 @@ if (mMap == null) {
         }   
     }); 
 
+    mMap.setOnCameraChangeListener(new OnCameraChangeListener(){
+
+		@Override
+		public void onCameraChange(CameraPosition pos) {
+			// TODO Auto-generated method stub
+			if (pos.zoom < 15){
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos.target, 15));
+			}
+			
+		}
+    	
+    });
     if ( mMap == null) {
         Toast.makeText(getApplicationContext(),
                  "Sorry! unable to create maps", Toast.LENGTH_SHORT)
@@ -110,6 +131,4 @@ protected void onResume() {
 super.onResume();
 initilizeMap();
 }
-
-
 }

@@ -223,15 +223,18 @@ containing a value of this type.
         public static final int larceny=0x7f02001f;
         public static final int motorvehicle=0x7f020020;
         public static final int murder=0x7f020021;
-        public static final int rape=0x7f020022;
-        public static final int robbery=0x7f020023;
+        public static final int noncrime=0x7f020022;
+        public static final int part2=0x7f020023;
+        public static final int rape=0x7f020024;
+        public static final int robbery=0x7f020025;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f060008;
-        public static final int action_settings=0x7f060012;
+        public static final int action_settings=0x7f060013;
         public static final int cleryact=0x7f060005;
         public static final int content=0x7f06000e;
         public static final int crimeLog=0x7f060006;
+        public static final int currDate=0x7f060011;
         public static final int data_button2=0x7f06000b;
         public static final int handle=0x7f06000f;
         public static final int hybrid=0x7f060004;
@@ -245,7 +248,7 @@ containing a value of this type.
         public static final int slidingDrawer1=0x7f06000d;
         public static final int terrain=0x7f060003;
         public static final int textView1=0x7f060009;
-        public static final int webView1=0x7f060011;
+        public static final int webView1=0x7f060012;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f080000;

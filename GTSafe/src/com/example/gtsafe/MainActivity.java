@@ -102,6 +102,8 @@ public class MainActivity extends Activity {
 	    cal.set(cal.MONTH, cal.JULY );
 	    cal.set(cal.DATE, 28 );
 	    
+	   
+	    
 	    Calendar calB = Calendar.getInstance();
 		calB.set(cal.YEAR, 2014 );
 	    calB.set(cal.MONTH, cal.JANUARY );

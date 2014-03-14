@@ -1,10 +1,12 @@
 package com.example.gtsafe.library;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.example.gtsafe.R;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
@@ -68,8 +70,11 @@ public class MapHelper {
 	}
 	
 	public GoogleMap populateCrimes(){
-		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
-
+		int days = 14;
+	    Calendar currCal = Calendar.getInstance();
+	    currCal.add(Calendar.DATE, -1 * days);
+	    Log.e("DATE", new java.sql.Date(currCal.getTimeInMillis()).toString());
+	    db.getCrimesByDate(new java.sql.Date(currCal.getTimeInMillis()), new OnDBGetListener<CrimeData>(){
 			@Override
 			public void OnGet(List<CrimeData> list) {
 				crimes = list;
@@ -129,6 +134,12 @@ public class MapHelper {
 	                      .title(crimes.get(x).getOffense().toString())
 	                      .snippet(crimes.get(x).getLocationName())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
+					}
+					else{
+						Marker tempMarker = map.addMarker(new MarkerOptions()
+	                      .position(crimes.get(x).getLocation())
+	                      .title(crimes.get(x).getOffense().toString())
+	                      .snippet(crimes.get(x).getLocationName()));
 					}
 				}
 			}

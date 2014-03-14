@@ -21,7 +21,8 @@ public class CleryActActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_clery_act);
+		
+		//setContentView(R.layout.activity_clery_act);
 		
 		// storing string resources into Array
 		String[] clery_acts = getResources().getStringArray(R.array.Clery_Acts);
@@ -36,13 +37,20 @@ public class CleryActActivity extends ListActivity {
 	              int position, long id) {
 	               
 	              // selected item 
-	              String product = ((TextView) view).getText().toString();
+	              for( int j = 0; j<=10;j++){
+	      			String summary = DBManager.getInstance().getCleryAct(j).getText();
+	      			// Launching new Activity on selecting single List Item
+		              Intent i = new Intent(getApplicationContext(), SingleListItem.class);
+		              
+					// sending data to new activity
+		              i.putExtra("product", summary);
+		              startActivity(i);
+	      			//WebView view = (WebView)findViewById(R.id.webView1);
+	      			//view.loadData(summary, "text/html", null);
+	      			//view.loadData(summary, "text/html", null);
+	      		}
 	               
-	              // Launching new Activity on selecting single List Item
-	              Intent i = new Intent(getApplicationContext(), SingleListItem.class);
-	              // sending data to new activity
-	              i.putExtra("product", product);
-	              startActivity(i);
+	              
 	             
 	          }
 	        });
