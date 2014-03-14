@@ -133,13 +133,14 @@ public class MapHelper {
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
 	                      .snippet(crimes.get(x).getLocationName())
-	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.noncrime)));
 					}
 					else{
 						Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet(crimes.get(x).getLocationName()));
+	                      .snippet(crimes.get(x).getLocationName())
+	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.part2)));
 					}
 				}
 			}

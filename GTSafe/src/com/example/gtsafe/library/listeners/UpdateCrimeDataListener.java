@@ -1,5 +1,11 @@
 package com.example.gtsafe.library.listeners;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,12 +15,16 @@ import android.os.AsyncTask;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.CrimeData;
+import com.example.gtsafe.model.OffenseType;
+import com.example.gtsafe.model.ZoneData;
+import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateCrimeDataListener implements OnGetJSONListener
 {
-	private OnDBUpdateListener listener;
+	private OnDBUpdateListener<CrimeData> listener;
 	
-	public UpdateCrimeDataListener(OnDBUpdateListener listener)
+	public UpdateCrimeDataListener(OnDBUpdateListener<CrimeData> listener)
 	{
 		this.listener = listener;
 	}
@@ -26,11 +36,12 @@ public class UpdateCrimeDataListener implements OnGetJSONListener
 		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);	
 	}
 	
-	private class UpdateCrimeTask extends AsyncTask<JSONObject, Void, Void>
+	private class UpdateCrimeTask extends AsyncTask<JSONObject, Void, CrimeData>
 	{
 		@Override
-		protected Void doInBackground(JSONObject... params)
+		protected CrimeData doInBackground(JSONObject... params)
 		{
+			CrimeData crime = null;
 			try
 			{
 				JSONObject object = params[0];
@@ -46,6 +57,18 @@ public class UpdateCrimeDataListener implements OnGetJSONListener
 				double lat = object.getDouble("latitude");
 				double lon = object.getDouble("longitude");
 				
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+						Locale.US);
+				Date d = null;
+				try {
+					d = format.parse(date);
+					crime = new CrimeData(new LatLng(lat,lon), location, d, OffenseType.ALL_OTHER_OFFENSES.getOffenseType(offense), 
+								offenseDesc, new ZoneData(null, zoneID, null));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				val.put("crime_id", crimeID);
 				val.put("offense", offense);
 				val.put("offense_desc", offenseDesc);
@@ -59,14 +82,14 @@ public class UpdateCrimeDataListener implements OnGetJSONListener
 			}
 			catch(JSONException e){}
 			
-			return null;
+			return crime;
 		}
 		
-		public void onPostExecute(Void result)
+		public void onPostExecute(CrimeData result)
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate();
+				listener.OnUpdate(result);
 			}
 		}
 	}

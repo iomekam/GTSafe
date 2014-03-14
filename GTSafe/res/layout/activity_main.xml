@@ -21,35 +21,26 @@
         android:id="@+id/map_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="102dp"
+        android:layout_alignLeft="@+id/data_button2"
+        android:layout_centerVertical="true"
         android:text="Map View" />
 
     <Button
         android:id="@+id/data_button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:text="Data View" />
-    
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/map_button"
+        android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:text="Clery Act View" />
+        android:layout_marginTop="46dp"
+        android:text="Data View" />
 
     <Button
         android:id="@+id/help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="40dp"
+        android:layout_alignLeft="@+id/map_button"
+        android:layout_below="@+id/map_button"
+        android:layout_marginTop="62dp"
         android:text="Help" />
 
 </RelativeLayout>

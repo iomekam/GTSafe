@@ -338,7 +338,7 @@ public class DBManager {
 		
 		c.close();
 
-		zInfo = new ZoneInfo(description);
+		zInfo = new ZoneInfo(zoneID, description);
 
 		selectQuery = "SELECT zone_id, points FROM zones WHERE zone_id = "
 				+ zoneID;
@@ -527,6 +527,26 @@ public class DBManager {
 		}
 		
 		return data;
+	}
+	
+	public List<CleryActModel> getAllCleryActs()
+	{
+		List<CleryActModel> dataList = new LinkedList<CleryActModel>();
+		String selectQuery = "SELECT ca_id FROM clery_acts";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		boolean hasNext = c.moveToFirst();
+
+		while (hasNext) 
+		{
+			dataList.add(getCleryAct(c.getInt(c.getColumnIndex("ca_id"))));
+			hasNext = c.moveToNext();
+		}
+
+		c.close();
+		instance.closeDatabase();
+
+		return dataList;
 	}
 
 	public void getCrimesByZone(final int zoneID,
