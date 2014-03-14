@@ -338,7 +338,7 @@ public class DBManager {
 		
 		c.close();
 
-		zInfo = new ZoneInfo(description);
+		zInfo = new ZoneInfo(zoneID, description);
 
 		selectQuery = "SELECT zone_id, points FROM zones WHERE zone_id = "
 				+ zoneID;
@@ -518,7 +518,7 @@ public class DBManager {
 				String text = c.getString(c
 						.getColumnIndex("ca_text"));
 
-				data = new CleryActModel(title, date, text);
+				data = new CleryActModel(caID, title, date, text);
 			} 
 			catch (ParseException e) 
 			{
@@ -526,7 +526,32 @@ public class DBManager {
 			}
 		}
 		
+		c.close();
+		instance.closeDatabase();
+		
 		return data;
+	}
+	
+	public List<CleryActModel> getAllCleryActs()
+	{
+		List<CleryActModel> dataList = new LinkedList<CleryActModel>();
+		
+		SQLiteDatabase db = instance.openDatabase();
+		String selectQuery = "SELECT ca_id FROM clery_acts ORDER BY ca_date DESC";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		boolean hasNext = c.moveToFirst();
+
+		while (hasNext) 
+		{
+			dataList.add(getCleryAct(c.getInt(c.getColumnIndex("ca_id"))));
+			hasNext = c.moveToNext();
+		}
+
+		c.close();
+		instance.closeDatabase();
+
+		return dataList;
 	}
 
 	public void getCrimesByZone(final int zoneID,

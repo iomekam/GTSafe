@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 	private TextView view;
 	private Button view_Button;
 	private Button data_Button;
+	private Button help_Button; // Omar created this.
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,42 +49,40 @@ public class MainActivity extends Activity {
 		
 		final DBManager db = DBManager.getInstance();
 		
-		db.setOnAllZoneUpdateEventListener(new OnDBUpdateListener()
+		db.setOnAllZoneUpdateEventListener(new OnDBUpdateListener<List<ZoneData>>()
 		{
 			@Override
-			public void OnUpdate() {
+			public void OnUpdate(List<ZoneData> data) {
 				s = s + "Zones: Done\n";
 				view.setText(s);
 			}
 		});
 		
-		db.setOnZoneUpdateEventListener(new OnDBUpdateListener()
+		db.setOnZoneUpdateEventListener(new OnDBUpdateListener<ZoneData>()
 		{
 			@Override
-			public void OnUpdate() 
+			public void OnUpdate(ZoneData data) 
 			{
-				ZoneData zone = db.getZone(15);
-					s = s + zone.getZoneID() + "\n";
+					s = s + data.getZoneID() + "\n";
 					view.setText(s);
 			}	
 		});
 		
-		db.setOnAllCrimeUpdateEventListener(new OnDBUpdateListener()
+		db.setOnAllCrimeUpdateEventListener(new OnDBUpdateListener<List<CrimeData>>()
 		{
 			@Override
-			public void OnUpdate() 
+			public void OnUpdate(List<CrimeData> data) 
 			{
 				s = s + "Crimes: Done\n";
 				view.setText(s);
 			}
 		});
 		
-		db.setOnCrimeUpdateEventListener(new OnDBUpdateListener()
+		db.setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
 		{
 			@Override 
-			public void OnUpdate() {
-				CrimeData data = db.getCrimeData(20);
-				view.setText(data.getLocationName());
+			public void OnUpdate(CrimeData data) {
+				view.setText("Adding crime: " + data.getDate() + " -- " + data.getLocationName());
 			}	
 		});
 		
@@ -97,7 +96,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance();//gives current date at given time
 		cal.set(cal.YEAR, 2013 );
 	    cal.set(cal.MONTH, cal.JULY );
 	    cal.set(cal.DATE, 28 );
@@ -116,7 +115,6 @@ public class MainActivity extends Activity {
 						   Toast.LENGTH_LONG).show();
 			}
 		});
-		
 		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
 
 			@Override
@@ -158,7 +156,16 @@ public class MainActivity extends Activity {
 			        Intent myIntent=new Intent(MainActivity.this,DataActivity.class);
 			        startActivity(myIntent);
 			 }
-			 });				
+			 });
+		
+		help_Button = (Button)findViewById(R.id.help);
+		help_Button.setOnClickListener(new View.OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+			        //Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
+			        //startActivity(myIntent);
+			 }
+			 });
 	}
 	
 	@Override
