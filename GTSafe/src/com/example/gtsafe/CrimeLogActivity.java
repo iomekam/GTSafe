@@ -1,6 +1,7 @@
 package com.example.gtsafe;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.example.gtsafe.library.DBManager;
@@ -33,259 +34,156 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class CrimeLogActivity extends Activity implements
-		OnItemSelectedListener, OnItemClickListener {
-
+		OnItemSelectedListener, OnItemClickListener 
+{
+	private enum Search
+	{
+		ZONE("Zone"), CRIME_TYPE("Crime Type"), DATE("Date");
+		
+		String name;
+		
+		private search(String name)
+		{
+			this.name = name;
+		}
+		
+		public String toString()
+		{
+			return name;
+		}
+	}
+	
 	final DBManager db = DBManager.getInstance();
 	ListView crimes;
 	Spinner searchCrimes;
 	CharSequence result;
-	String[] searchBy = { "Search By", "Zone", "Crime", "Date" };
-	final ArrayList<CrimeData> crimeDataHolder = new ArrayList<CrimeData>();
+	List<String> searchBy;
+	ArrayList<CrimeData> crimeDataHolder;
 	ArrayAdapter<CrimeData> adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_log);
-
+		
+		crimeDataHolder = new ArrayList<CrimeData>();
 		adapter = new ArrayAdapter<CrimeData>(CrimeLogActivity.this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				crimeDataHolder);
 
 		crimes = (ListView) findViewById(R.id.crimeLog);
 		searchCrimes = (Spinner) findViewById(R.id.filterDate);
+		searchBy = new LinkedList<String>();
+		
+		for(int i = 0; i < Search.values().length; i++)
+		{
+			searchBy.add(Search.values()[i].toString());
+		}
+		
 		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
 				this, android.R.layout.simple_spinner_item, searchBy);
 
 		// were gonna start of the list view with all of the crime data
-		db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
+		db.getAllCrimeData(new OnDBGetListener<CrimeData>() 
+		{
 			@Override
-			public void OnGet(List<CrimeData> list) {
-				for (int i = 0; i < list.size(); i++) {
-					crimeDataHolder.add(list.get(i));
-				}
-
+			public void OnGet(List<CrimeData> list) 
+			{
+				crimeDataHolder.addAll(list);
 				crimes.setAdapter(adapter);
 				crimes.setTextFilterEnabled(true);
-				crimes.setOnItemClickListener(CrimeLogActivity.this);
+				crimes.setOnItemClickListener(new OnItemClickListener()
+				{
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int position, long id) 
+					{
+						AlertDialog alertDialog = new AlertDialog.Builder(getApplicationContext()).create();
+						String view= crimes.getChildAt(position).toString();
+						alertDialog.setTitle("Crime Info");
+						alertDialog.setMessage(view);
+						alertDialog.show();
+					}	
+				});
+				
 				spinnerArrayAdapter
 						.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The
 																									// drop
-																									// down
-																									// view
+																									// down		
+				// view
 				searchCrimes.setAdapter(spinnerArrayAdapter);
-				searchCrimes.setOnItemSelectedListener(CrimeLogActivity.this);
+				searchCrimes.setOnItemSelectedListener(new OnItemSelectedListener()
+				{
+					@Override
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int position, long id) 
+					{
+						if (position == 1) 
+						{
+							List<String> zones = new LinkedList<String>();
+							for(ZoneData data: db.getAllZones())
+							{
+								zones.add("" + data.getZoneID());
+							}
+							
+							showPopUp("Zones", zones);
+
+						} 
+						else if (position == 2) 
+						{
+							List<String> crimeTypes = new LinkedList<String>();
+							for(int i = 0; i < OffenseType.values().length; i++)
+							{
+								crimeTypes.add(OffenseType.values()[i].toString());
+							}
+
+							showPopUpCrimes("Crime Types", crimeTypes, OffenseType.values());
+
+						} 
+						
+						searchCrimes.setSelection(-1);
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {}
+					
+				});
+				
 				// crimes.setFilterText((String) result);
 			}
 		});
-
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.crime_log, menu);
-		return true;
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
-		int position = searchCrimes.getSelectedItemPosition();
-		if (position == 0) {
-			// do nothing it acts as a header
-		} else if (position == 1) {
-			int j = 1;
-			String[] zones = new String[db.getAllZones().size()];
-			for (int i = 0; i < zones.length; i++) {
-				zones[i] = "" + j;
-				j++;
-			}
-			showPopUpZones("Zones", zones);
-
-		} else if (position == 2) { 
-			
-			String [] crime = { OffenseType.HOMICIDE.toString(),
-					OffenseType.RAPE.toString(),
-					OffenseType.ROBBERY.toString(),
-					OffenseType.AGG_ASSAULT.toString(),
-					OffenseType.BURGLARY.toString(),
-					OffenseType.LARCENY.toString(),
-					OffenseType.AUTO_THEFT.toString(),
-					OffenseType.ARSON.toString(),
-					OffenseType.OTHER_ASSAULTS.toString(),
-					OffenseType.FORGERY.toString(),
-					OffenseType.FRAUD.toString(),
-					OffenseType.EMBEZZLEMENT.toString(),
-					OffenseType.STOLEN_PROPERTY.toString(),
-					OffenseType.DAMAGE_TO_PROPERTY.toString(),
-					OffenseType.WEAPONS_OFFENSE.toString(),
-					OffenseType.PROSTITUTION.toString(),
-					OffenseType.SEX_OFFENSE.toString(),
-					OffenseType.DANGEROUS_DRUGS.toString(),
-					OffenseType.GAMBLING_OFFENSE.toString(),
-					OffenseType.FAMILY_OFFENSE.toString(),
-					OffenseType.DUI.toString(),
-					OffenseType.LIQUOR_LAWS.toString(),
-					OffenseType.PUBLIC_PEACE_OFFENSE.toString(),
-					OffenseType.VAGRANCY_OFFENSE.toString(),
-					OffenseType.ALL_OTHER_OFFENSES.toString(),
-					OffenseType.NO_CRIME.toString(),
-					OffenseType.NON_CRIME.toString() };
-			
-			OffenseType [] offenses= { OffenseType.HOMICIDE ,
-					OffenseType.RAPE ,
-					OffenseType.ROBBERY ,
-					OffenseType.AGG_ASSAULT ,
-					OffenseType.BURGLARY ,
-					OffenseType.LARCENY ,
-					OffenseType.AUTO_THEFT ,
-					OffenseType.ARSON ,
-					OffenseType.OTHER_ASSAULTS ,
-					OffenseType.FORGERY ,
-					OffenseType.FRAUD ,
-					OffenseType.EMBEZZLEMENT ,
-					OffenseType.STOLEN_PROPERTY ,
-					OffenseType.DAMAGE_TO_PROPERTY ,
-					OffenseType.WEAPONS_OFFENSE ,
-					OffenseType.PROSTITUTION ,
-					OffenseType.SEX_OFFENSE ,
-					OffenseType.DANGEROUS_DRUGS ,
-					OffenseType.GAMBLING_OFFENSE ,
-					OffenseType.FAMILY_OFFENSE ,
-					OffenseType.DUI ,
-					OffenseType.LIQUOR_LAWS ,
-					OffenseType.PUBLIC_PEACE_OFFENSE ,
-					OffenseType.VAGRANCY_OFFENSE ,
-					OffenseType.ALL_OTHER_OFFENSES ,
-					OffenseType.NO_CRIME ,
-					OffenseType.NON_CRIME  };
-
-			showPopUpCrimes("Crime Types", crime, offenses);
-
-		} else {
-
-		}
-		searchCrimes.setSelection(-1);
-
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void showPopUpZones(String title, String[] options) {
+	public void showPopUp(String title, List<String> options, Search type) {
 		AlertDialog.Builder b = new Builder(this);
 		b.setTitle(title);
-		String[] types = options;
-		b.setItems(types, new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-				dialog.dismiss();
-				switch (which) {
-				case 0:
+		
+		if(type == Search.ZONE)
+		{
+			b.setItems((CharSequence[]) options.toArray(), new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
 					adapter.clear();
-					db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
+					
+					db.getCrimesByZone(which, new OnDBGetListener<CrimeData>() {
 						@Override
 						public void OnGet(List<CrimeData> list) {
-							for (int i = 0; i < list.size(); i++) {
-								if (list.get(i).getZone().getZoneID() == 1) {
-									adapter.add(list.get(i));
-									crimeDataHolder.add(list.get(i));
-								}
-							}
+							adapter.addAll(list);
+							crimeDataHolder.addAll(list);
+	
 							// set the changed data
 							// notify that the model changed
 							adapter.notifyDataSetChanged();
-
 						}
 					});
-
-					break;
-				case 1:
-					adapter.clear();
-					db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
-						@Override
-						public void OnGet(List<CrimeData> list) {
-							for (int i = 0; i < list.size(); i++) {
-								if (list.get(i).getZone().getZoneID() == 2) {
-									adapter.add(list.get(i));
-									crimeDataHolder.add(list.get(i));
-								}
-							}
-							// set the changed data
-							// notify that the model changed
-							adapter.notifyDataSetChanged();
-
-						}
-					});
-					break;
-
-				case 2:
-					adapter.clear();
-					db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
-						@Override
-						public void OnGet(List<CrimeData> list) {
-							for (int i = 0; i < list.size(); i++) {
-								if (list.get(i).getZone().getZoneID() == 3) {
-									adapter.add(list.get(i));
-									crimeDataHolder.add(list.get(i));
-								}
-							}
-							// set the changed data
-							// notify that the model changed
-							adapter.notifyDataSetChanged();
-
-						}
-					});
-					break;
-
-				case 3:
-					adapter.clear();
-					db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
-						@Override
-						public void OnGet(List<CrimeData> list) {
-							for (int i = 0; i < list.size(); i++) {
-								if (list.get(i).getZone().getZoneID() == 4) {
-									adapter.add(list.get(i));
-									crimeDataHolder.add(list.get(i));
-								}
-							}
-							// set the changed data
-							// notify that the model changed
-							adapter.notifyDataSetChanged();
-
-						}
-					});
-
-					break;
-				case 4:
-					adapter.clear();
-					db.getAllCrimeData(new OnDBGetListener<CrimeData>() {
-						@Override
-						public void OnGet(List<CrimeData> list) {
-							for (int i = 0; i < list.size(); i++) {
-								if (list.get(i).getZone().getZoneID() == 5) {
-									adapter.add(list.get(i));
-									crimeDataHolder.add(list.get(i));
-								}
-							}
-							// set the changed data
-							// notify that the model changed
-							adapter.notifyDataSetChanged();
-
-						}
-					});
-					break;
 				}
-
-			}
-
-		});
+			});
+		}
+		else if(type == Search.CRIME_TYPE)
+		{
+			
+		}
 
 		b.show();
 	}
@@ -326,17 +224,4 @@ public class CrimeLogActivity extends Activity implements
 
 		b.show();
 	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-		String view=l.getChildAt(position).toString();
-		alertDialog.setTitle("Crime Info");
-		alertDialog.setMessage(view);
-		alertDialog.show();
-		
-	}
-	
-
 }
