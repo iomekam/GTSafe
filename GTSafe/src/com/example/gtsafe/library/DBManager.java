@@ -338,7 +338,7 @@ public class DBManager {
 		
 		c.close();
 
-		zInfo = new ZoneInfo(description);
+		zInfo = new ZoneInfo(zoneID, description);
 
 		selectQuery = "SELECT zone_id, points FROM zones WHERE zone_id = "
 				+ zoneID;

@@ -1,5 +1,5 @@
 package com.example.gtsafe.library.listeners.interfaces;
 
-public interface OnDBUpdateListener {
-	public void OnUpdate();
+public interface OnDBUpdateListener<T> {
+	public void OnUpdate(T updatedItem);
 }

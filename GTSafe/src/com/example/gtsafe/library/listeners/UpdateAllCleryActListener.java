@@ -1,5 +1,13 @@
 package com.example.gtsafe.library.listeners;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,12 +19,13 @@ import android.util.Log;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.CleryActModel;
 
 public class UpdateAllCleryActListener implements OnGetJSONListener 
 {
-	private OnDBUpdateListener listener;
+	private OnDBUpdateListener<List<CleryActModel>> listener;
 	
-	public UpdateAllCleryActListener(OnDBUpdateListener listener)
+	public UpdateAllCleryActListener(OnDBUpdateListener<List<CleryActModel>> listener)
 	{
 		this.listener = listener;
 	}
@@ -28,15 +37,17 @@ public class UpdateAllCleryActListener implements OnGetJSONListener
 		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
 	}
 	
-	private class UpdateAllCleryActTask extends AsyncTask<JSONObject, Void, Void>
+	private class UpdateAllCleryActTask extends AsyncTask<JSONObject, Void, List<CleryActModel>>
 	{
 		@Override
-		protected Void doInBackground(JSONObject... params)
+		protected List<CleryActModel> doInBackground(JSONObject... params)
 		{
 			JSONObject object = params[0];
 			
 			ContentValues val = new ContentValues();
 			JSONArray jArray = null;
+			
+			List<CleryActModel> list = new LinkedList<CleryActModel>();
 			
 			try 
 			{
@@ -51,6 +62,17 @@ public class UpdateAllCleryActListener implements OnGetJSONListener
 					String title = jObj.getString("title");
 					String text = jObj.getString("text");
 					
+					DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+							Locale.US);
+					Date d = null;
+					try {
+						d = format.parse(date);
+						list.add(new CleryActModel(title, d, text));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					val.put("ca_id", caID);
 					val.put("ca_date", date);
 					val.put("ca_title", title);
@@ -62,14 +84,14 @@ public class UpdateAllCleryActListener implements OnGetJSONListener
 			}
 			catch(JSONException e){}
 			
-			return null;
+			return list;
 		}
 		
-		public void onPostExecute(Void result)
+		public void onPostExecute(List<CleryActModel> result)
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate();
+				listener.OnUpdate(result);
 			}
 			else
 			{

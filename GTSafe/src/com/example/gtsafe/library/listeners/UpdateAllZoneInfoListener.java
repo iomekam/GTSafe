@@ -1,5 +1,8 @@
 package com.example.gtsafe.library.listeners;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,12 +14,13 @@ import android.util.Log;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.ZoneInfo;
 
 public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 
-	private OnDBUpdateListener listener;
+	private OnDBUpdateListener<List<ZoneInfo>> listener;
 	
-	public UpdateAllZoneInfoListener(OnDBUpdateListener listener)
+	public UpdateAllZoneInfoListener(OnDBUpdateListener<List<ZoneInfo>> listener)
 	{
 		this.listener = listener;
 	}
@@ -28,13 +32,15 @@ public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 	}
 
 	private class UpdateAllZoneInformation extends
-			AsyncTask<JSONObject, Void, Void> {
+			AsyncTask<JSONObject, Void, List<ZoneInfo>> {
 		@Override
-		protected Void doInBackground(JSONObject... params) {
+		protected List<ZoneInfo> doInBackground(JSONObject... params) {
 			JSONObject object = params[0];
 
 			ContentValues val = new ContentValues();
 			JSONArray jArray = null;
+			
+			List<ZoneInfo> list = new LinkedList<ZoneInfo>();
 
 			try {
 				jArray = object.getJSONArray("zone_info");
@@ -43,6 +49,8 @@ public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 					int zoneID = jObj.getInt("zone_id");
 					int zoneInfoID = jObj.getInt("zone_info_id");
 					String description = jObj.getString("zone_description");
+					
+					list.add(new ZoneInfo(zoneID, null));
 
 					val.put("zone_info_id", zoneInfoID);
 					val.put("zone_id", zoneID);
@@ -56,12 +64,12 @@ public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 			
 			}
 
-			return null;
+			return list;
 		}
 
-		public void onPostExecute(Void result) {
+		public void onPostExecute(List<ZoneInfo> result) {
 			if (listener != null) {
-				listener.OnUpdate();
+				listener.OnUpdate(result);
 			} else {
 				Log.e("ZInfo:", "Done");
 			}

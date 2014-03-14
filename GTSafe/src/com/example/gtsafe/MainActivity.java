@@ -48,42 +48,40 @@ public class MainActivity extends Activity {
 		
 		final DBManager db = DBManager.getInstance();
 		
-		db.setOnAllZoneUpdateEventListener(new OnDBUpdateListener()
+		db.setOnAllZoneUpdateEventListener(new OnDBUpdateListener<List<ZoneData>>()
 		{
 			@Override
-			public void OnUpdate() {
+			public void OnUpdate(List<ZoneData> data) {
 				s = s + "Zones: Done\n";
 				view.setText(s);
 			}
 		});
 		
-		db.setOnZoneUpdateEventListener(new OnDBUpdateListener()
+		db.setOnZoneUpdateEventListener(new OnDBUpdateListener<ZoneData>()
 		{
 			@Override
-			public void OnUpdate() 
+			public void OnUpdate(ZoneData data) 
 			{
-				ZoneData zone = db.getZone(15);
-					s = s + zone.getZoneID() + "\n";
+					s = s + data.getZoneID() + "\n";
 					view.setText(s);
 			}	
 		});
 		
-		db.setOnAllCrimeUpdateEventListener(new OnDBUpdateListener()
+		db.setOnAllCrimeUpdateEventListener(new OnDBUpdateListener<List<CrimeData>>()
 		{
 			@Override
-			public void OnUpdate() 
+			public void OnUpdate(List<CrimeData> data) 
 			{
 				s = s + "Crimes: Done\n";
 				view.setText(s);
 			}
 		});
 		
-		db.setOnCrimeUpdateEventListener(new OnDBUpdateListener()
+		db.setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
 		{
 			@Override 
-			public void OnUpdate() {
-				CrimeData data = db.getCrimeData(20);
-				view.setText(data.getLocationName());
+			public void OnUpdate(CrimeData data) {
+				view.setText("Adding crime: " + data.getDate() + " -- " + data.getLocationName());
 			}	
 		});
 		

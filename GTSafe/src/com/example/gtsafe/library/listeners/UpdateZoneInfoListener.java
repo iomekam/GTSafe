@@ -10,12 +10,13 @@ import android.os.AsyncTask;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.ZoneInfo;
 
 public class UpdateZoneInfoListener implements OnGetJSONListener {
 
-	private OnDBUpdateListener listener;
+	private OnDBUpdateListener<ZoneInfo> listener;
 	
-	public UpdateZoneInfoListener(OnDBUpdateListener listener)
+	public UpdateZoneInfoListener(OnDBUpdateListener<ZoneInfo> listener)
 	{
 		this.listener = listener;
 	}
@@ -27,16 +28,19 @@ public class UpdateZoneInfoListener implements OnGetJSONListener {
 	}
 
 	private class UpdateZoneInformation extends
-			AsyncTask<JSONObject, Void, Void> {
+			AsyncTask<JSONObject, Void, ZoneInfo> {
 		@Override
-		protected Void doInBackground(JSONObject... params) {
+		protected ZoneInfo doInBackground(JSONObject... params) {
 			JSONObject jObj = params[0];
-
+			ZoneInfo info = null;
+			
 			try {
 				ContentValues val = new ContentValues();
 				int zoneID = jObj.getInt("zone_id");
 				int zoneInfoID= jObj.getInt("zone_info_id");
 				String description = jObj.getString("zone_description");
+				
+				info = new ZoneInfo(zoneID, null);
 
 				val.put("zone_info_id", zoneInfoID);
 				val.put("zone_id", zoneID);
@@ -47,15 +51,15 @@ public class UpdateZoneInfoListener implements OnGetJSONListener {
 			} 
 			catch (JSONException e) {}
 
-			return null;
+			return info;
 
 		}
 	}
-	public void onPostExecute(Void result)
+	public void onPostExecute(ZoneInfo result)
 	{
 		if(listener != null)
 		{
-			listener.OnUpdate();
+			listener.OnUpdate(result);
 		}
 	}
 }

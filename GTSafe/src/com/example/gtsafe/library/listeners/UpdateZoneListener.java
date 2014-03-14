@@ -9,11 +9,12 @@ import android.os.AsyncTask;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.ZoneData;
 
 public class UpdateZoneListener implements OnGetJSONListener
 {
-	OnDBUpdateListener listener;
-	public UpdateZoneListener(OnDBUpdateListener listener)
+	OnDBUpdateListener<ZoneData> listener;
+	public UpdateZoneListener(OnDBUpdateListener<ZoneData> listener)
 	{
 		this.listener = listener;
 	}
@@ -23,12 +24,13 @@ public class UpdateZoneListener implements OnGetJSONListener
 		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, jObj);
 	}
 	
-	private class UpdateAllZoneTask extends AsyncTask<JSONObject, Void, Void>
+	private class UpdateAllZoneTask extends AsyncTask<JSONObject, Void, ZoneData>
 	{
 		@Override
-		protected Void doInBackground(JSONObject... params)
+		protected ZoneData doInBackground(JSONObject... params)
 		{
 			JSONObject jObj = params[0];
+			ZoneData zone = null;
 			
 			try 
 			{
@@ -37,20 +39,22 @@ public class UpdateZoneListener implements OnGetJSONListener
 				int zoneID = jObj.getInt("zone_id");
 				String points = jObj.getString("points");
 				
+				zone = new ZoneData(null, zoneID, null);
+				
 				val.put("zone_id", zoneID);
 				val.put("points", points);
 				DBManager.getInstance().insert("zones", null, val);
 			}
 			catch(JSONException e){}
 			
-			return null;
+			return zone;
 		}
 		
-		public void onPostExecute(Void result)
+		public void onPostExecute(ZoneData result)
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate();
+				listener.OnUpdate(result);
 			}
 		}
 	}
