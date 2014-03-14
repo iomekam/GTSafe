@@ -13,6 +13,13 @@
         android:textColor="@android:color/black"
         android:textSize="13sp"
         android:textStyle="bold" />
+        <TextView
+        android:id="@+id/crime_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"/>
 
     <TextView
         android:id="@+id/crime_location"
@@ -21,6 +28,7 @@
         android:padding="2dp"
         android:textColor="@android:color/black"
         android:textSize="10sp"/>
+
         <TextView
         android:id="@+id/crime_details"
         android:layout_width="wrap_content"

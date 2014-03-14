@@ -83,63 +83,63 @@ public class MapHelper {
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.assult)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.BURGLARY){
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.burglary)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.LARCENY){
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.larceny)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.AUTO_THEFT){
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.motorvehicle)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.HOMICIDE){
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.murder)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.RAPE){
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.rape)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.ROBBERY){
 						  Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.robbery)));
 					}
 					else if(crimes.get(x).getOffense() == OffenseType.NON_CRIME){
 						Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.noncrime)));
 					}
 					else{
 						Marker tempMarker = map.addMarker(new MarkerOptions()
 	                      .position(crimes.get(x).getLocation())
 	                      .title(crimes.get(x).getOffense().toString())
-	                      .snippet("Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
+	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.part2)));
 					}
 				}

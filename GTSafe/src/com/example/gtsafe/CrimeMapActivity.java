@@ -85,16 +85,19 @@ if (mMap == null) {
             StringTokenizer tokens = new StringTokenizer(marker.getSnippet(), "|");
             String first = tokens.nextToken();// this will contain "Fruit"
             String second = tokens.nextToken();
+            String third = tokens.nextToken();
             
 
             // Getting reference to the TextView to set title
             TextView titles = (TextView) v.findViewById(R.id.title);
+            TextView dates = (TextView) v.findViewById(R.id.crime_date);
             TextView location = (TextView) v.findViewById(R.id.crime_location);
             TextView description = (TextView) v.findViewById(R.id.crime_details);
             
             titles.setText(marker.getTitle());
-            location.setText(first);
-            description.setText(second);
+            dates.setText(first);
+            location.setText(second);
+            description.setText(third);
             //note.setText(marker.getTitle() );
             // Returning the view containing InfoWindow contents
             return v;
