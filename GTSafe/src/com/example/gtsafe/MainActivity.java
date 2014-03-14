@@ -159,21 +159,12 @@ public class MainActivity extends Activity {
 			 }
 			 });
 		
-		((Button)findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
-			 @Override
-			 public void onClick(View v) {
-			        Intent myIntent=new Intent(view.getContext(),CleryActActivity.class);
-			        startActivity(myIntent);
-			        finish();
-			 }
-		});	
-		
 		help_Button = (Button)findViewById(R.id.help);
 		help_Button.setOnClickListener(new View.OnClickListener() {
 			 @Override
 			 public void onClick(View v) {
-			        Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
-			        startActivity(myIntent);
+			        //Intent myIntent=new Intent(MainActivity.this,HelpActivity.class);
+			        //startActivity(myIntent);
 			 }
 			 });
 	}

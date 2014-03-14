@@ -528,6 +528,26 @@ public class DBManager {
 		
 		return data;
 	}
+	
+	public List<CleryActModel> getAllCleryActs()
+	{
+		List<CleryActModel> dataList = new LinkedList<CleryActModel>();
+		String selectQuery = "SELECT ca_id FROM clery_acts";
+		
+		Cursor c = db.rawQuery(selectQuery, null);
+		boolean hasNext = c.moveToFirst();
+
+		while (hasNext) 
+		{
+			dataList.add(getCleryAct(c.getInt(c.getColumnIndex("ca_id"))));
+			hasNext = c.moveToNext();
+		}
+
+		c.close();
+		instance.closeDatabase();
+
+		return dataList;
+	}
 
 	public void getCrimesByZone(final int zoneID,
 			final OnDBGetListener<CrimeData> listener) {
