@@ -34,4 +34,9 @@ public class CleryActModel
 		return id;
 	}
 	
+	public String toString()
+	{
+		return title;
+	}
+	
 }
