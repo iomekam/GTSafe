@@ -63,6 +63,7 @@ try {
 private void initilizeMap() {
 if (mMap == null) {
     mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     mMap.setMyLocationEnabled(true);
     helper = new MapHelper(mMap);
     mMap = helper.populateZones();
