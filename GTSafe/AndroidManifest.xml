@@ -19,14 +19,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <!--
-     The following two permissions are not required to use
-<<<<<<< HEAD
-     Google Maps Android API v2, but are recommended.
-=======
-     Google Maps Android API v2, but are recommended.
->>>>>>> 35a1bee397b960cab978b92edc6547c37908a8e8
-    -->
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -97,13 +90,10 @@
             android:label="@string/title_activity_crime_log" >
         </activity>
         <activity
-<<<<<<< HEAD
             android:name="com.example.gtsafe.SingleListItem"
             android:label="@string/title_activity_single_list_item" >
-=======
             android:name="com.example.gtsafe.HelpActivity"
             android:label="@string/title_activity_help" >
->>>>>>> 35a1bee397b960cab978b92edc6547c37908a8e8
         </activity>
     </application>
 

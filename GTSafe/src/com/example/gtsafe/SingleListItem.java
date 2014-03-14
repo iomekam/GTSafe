@@ -22,9 +22,6 @@ public class SingleListItem extends Activity {
 		WebView view = (WebView)findViewById(R.id.webView1);
 		view.loadData(summary, "text/html", null);
 		view.loadData(summary, "text/html", null);
-		
-
-       
 	}
 
 	@Override
