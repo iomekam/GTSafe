@@ -67,7 +67,7 @@ public class UpdateAllCleryActListener implements OnGetJSONListener
 					Date d = null;
 					try {
 						d = format.parse(date);
-						list.add(new CleryActModel(title, d, text));
+						list.add(new CleryActModel(caID, title, d, text));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
