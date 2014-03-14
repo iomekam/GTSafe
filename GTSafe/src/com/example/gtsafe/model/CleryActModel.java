@@ -7,9 +7,11 @@ public class CleryActModel
 	private String title;
 	private Date date;
 	private String text;
+	private int id;
 	
-	public CleryActModel(String title, Date date, String text)
+	public CleryActModel(int id, String title, Date date, String text)
 	{
+		this.id = id;
 		this.title = title;
 		this.date = date;
 		this.text = text;
@@ -26,4 +28,15 @@ public class CleryActModel
 	public String getTitle() {
 		return title;
 	}
+	
+	public int getID()
+	{
+		return id;
+	}
+	
+	public String toString()
+	{
+		return date.toLocaleString() + " -- " + title;
+	}
+	
 }

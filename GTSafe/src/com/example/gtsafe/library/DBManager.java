@@ -518,7 +518,7 @@ public class DBManager {
 				String text = c.getString(c
 						.getColumnIndex("ca_text"));
 
-				data = new CleryActModel(title, date, text);
+				data = new CleryActModel(caID, title, date, text);
 			} 
 			catch (ParseException e) 
 			{
@@ -526,13 +526,18 @@ public class DBManager {
 			}
 		}
 		
+		c.close();
+		instance.closeDatabase();
+		
 		return data;
 	}
 	
 	public List<CleryActModel> getAllCleryActs()
 	{
 		List<CleryActModel> dataList = new LinkedList<CleryActModel>();
-		String selectQuery = "SELECT ca_id FROM clery_acts";
+		
+		SQLiteDatabase db = instance.openDatabase();
+		String selectQuery = "SELECT ca_id FROM clery_acts ORDER BY ca_date DESC";
 		
 		Cursor c = db.rawQuery(selectQuery, null);
 		boolean hasNext = c.moveToFirst();

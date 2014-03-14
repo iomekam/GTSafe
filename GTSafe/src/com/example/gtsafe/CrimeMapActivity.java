@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-
+import java.util.StringTokenizer;
 public class CrimeMapActivity extends Activity {
 private GoogleMap mMap;
 private MapHelper helper;
@@ -63,49 +63,53 @@ try {
 private void initilizeMap() {
 if (mMap == null) {
     mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     mMap.setMyLocationEnabled(true);
     helper = new MapHelper(mMap);
     mMap = helper.populateZones();
     mMap = helper.populateCrimes();
+    
     mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
-    	 
+
         // Use default InfoWindow frame
         @Override
-        public View getInfoWindow(Marker arg0) {
+        public View getInfoWindow(Marker marker) {              
             return null;
-        }
+        }           
 
         // Defines the contents of the InfoWindow
         @Override
-        public View getInfoContents(Marker arg0) {
+        public View getInfoContents(Marker marker) {
 
             // Getting view from the layout file info_window_layout
-            //View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+            View v = getLayoutInflater().inflate(R.layout.infowindow, null);
+            StringTokenizer tokens = new StringTokenizer(marker.getSnippet(), "|");
+            String first = tokens.nextToken();// this will contain "Fruit"
+            String second = tokens.nextToken();
+            String third = tokens.nextToken();
+            
 
-            // Getting the position from the marker
-            LatLng latLng = arg0.getPosition();
-
-            // Getting reference to the TextView to set latitude
-            //TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
-
-            // Getting reference to the TextView to set longitude
-            //TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
-  
-            // Setting the latitude
-            //tvLat.setText("Latitude:");
-
-            // Setting the longitude
-            //tvLng.setText("Longitude:");
-
+            // Getting reference to the TextView to set title
+            TextView titles = (TextView) v.findViewById(R.id.title);
+            TextView dates = (TextView) v.findViewById(R.id.crime_date);
+            TextView location = (TextView) v.findViewById(R.id.crime_location);
+            TextView description = (TextView) v.findViewById(R.id.crime_details);
+            
+            titles.setText(marker.getTitle());
+            dates.setText(first);
+            location.setText(second);
+            description.setText(third);
+            //note.setText(marker.getTitle() );
             // Returning the view containing InfoWindow contents
-            //return v;
+            return v;
 
         }
-    });
+
+    });  
     
     zones = helper.getZones();
-	int days = 14;
     Calendar currCal = Calendar.getInstance();
+    int days = currCal.getActualMaximum(Calendar.DAY_OF_MONTH);
     currCal.add(Calendar.DATE, -1 * days);
     date = (TextView)findViewById(R.id.currDate);
     date.setText("Date Range: " + (new java.sql.Date(currCal.getTimeInMillis()).toString()) + " - Today");
@@ -126,10 +130,6 @@ if (mMap == null) {
 	              }
 	            }
             }
-            if(result!= -1){
-				Toast.makeText(getApplicationContext(), "Zone: " + result,
-						   Toast.LENGTH_LONG).show();
-            }
         }   
     }); 
 
@@ -138,8 +138,8 @@ if (mMap == null) {
 		@Override
 		public void onCameraChange(CameraPosition pos) {
 			// TODO Auto-generated method stub
-			if (pos.zoom < 17){
-				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos.target, 17));
+			if (pos.zoom < 14){
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos.target, 14));
 			}
 			
 		}
@@ -150,10 +150,10 @@ if (mMap == null) {
                  "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                  .show();
     }
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 17));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 14));
 }
     else{
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 17));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 14));
 }
 	filterButt = (Button)findViewById(R.id.ok);
 	filterButt.setOnClickListener(new View.OnClickListener() {
