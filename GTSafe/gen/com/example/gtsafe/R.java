@@ -236,14 +236,14 @@ containing a value of this type.
     }
     public static final class id {
         public static final int LinearLayout01=0x7f060008;
-        public static final int action_settings=0x7f060019;
+        public static final int action_settings=0x7f06001a;
         public static final int btnBack=0x7f06000b;
         public static final int btnChangeImage=0x7f06000a;
-        public static final int cleryActView=0x7f060005;
+        public static final int cleryact=0x7f060005;
         public static final int content=0x7f060012;
         public static final int crimeLog=0x7f060006;
-        public static final int crime_details=0x7f060018;
-        public static final int crime_location=0x7f060017;
+        public static final int crime_details=0x7f060019;
+        public static final int crime_location=0x7f060018;
         public static final int currDate=0x7f060015;
         public static final int data_button2=0x7f06000e;
         public static final int handle=0x7f060013;
@@ -260,7 +260,8 @@ containing a value of this type.
         public static final int slidingDrawer1=0x7f060011;
         public static final int terrain=0x7f060003;
         public static final int textView1=0x7f06000c;
-        public static final int title=0x7f060016;
+        public static final int title=0x7f060017;
+        public static final int webView1=0x7f060016;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f080000;
@@ -273,8 +274,9 @@ containing a value of this type.
         public static final int activity_help=0x7f030004;
         public static final int activity_main=0x7f030005;
         public static final int activity_map=0x7f030006;
-        public static final int fragment_help=0x7f030007;
-        public static final int infowindow=0x7f030008;
+        public static final int activity_single_list_item=0x7f030007;
+        public static final int fragment_help=0x7f030008;
+        public static final int infowindow=0x7f030009;
     }
     public static final class menu {
         public static final int clery_act=0x7f0b0000;
