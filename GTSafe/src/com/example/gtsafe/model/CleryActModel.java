@@ -36,7 +36,7 @@ public class CleryActModel
 	
 	public String toString()
 	{
-		return title;
+		return date.toLocaleString() + " -- " + title;
 	}
 	
 }

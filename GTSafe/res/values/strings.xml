@@ -11,5 +11,6 @@
     <string name="title_activity_crime_stat">CrimeStatActivity</string>
     <string name="title_activity_crime_log">CrimeLogActivity</string>
     <string name="title_activity_help">HelpActivity</string>
+    <string name="title_activity_single_item">SingleItemActivity</string>
 
 </resources>

@@ -96,6 +96,10 @@
             android:name="com.example.gtsafe.HelpActivity"
             android:label="@string/title_activity_help" >
         </activity>
+        <activity
+            android:name="com.example.gtsafe.SingleListItem"
+            android:label="@string/title_activity_single_item" >
+        </activity>
     </application>
     
 

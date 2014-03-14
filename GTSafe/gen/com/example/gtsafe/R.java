@@ -392,6 +392,7 @@ containing a value of this type.
         public static final int title_activity_help=0x7f070023;
         public static final int title_activity_main_activity2=0x7f07001f;
         public static final int title_activity_map=0x7f07001d;
+        public static final int title_activity_single_item=0x7f070024;
     }
     public static final class style {
         /** 
