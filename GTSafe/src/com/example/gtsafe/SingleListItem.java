@@ -1,6 +1,7 @@
 package com.example.gtsafe;
 
 import com.example.gtsafe.library.DBManager;
+import com.example.gtsafe.model.CleryActModel;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -18,10 +19,12 @@ public class SingleListItem extends Activity {
 		Intent i = getIntent();
 
         // getting attached intent data
-        String summary = i.getStringExtra("product");
+        int id = i.getIntExtra("clery_id", 1);
+        
+        CleryActModel model = DBManager.getInstance().getCleryAct(id);
+        
 		WebView view = (WebView)findViewById(R.id.webView1);
-		view.loadData(summary, "text/html", null);
-		view.loadData(summary, "text/html", null);
+		view.loadData(model.getText(), "text/html", null);
 	}
 
 	@Override

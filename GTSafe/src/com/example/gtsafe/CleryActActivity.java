@@ -42,14 +42,11 @@ public class CleryActActivity extends ListActivity {
 	               
 	        	  CleryActModel model = (CleryActModel)lv.getItemAtPosition(position);
 	        	  
-	        	  Intent myIntent = new Intent(view.getContext(), SingleListItem.class);
-	        	  startActivity(myIntent);
+	        	  Intent intent = new Intent(view.getContext(), SingleListItem.class);
+	        	  intent.putExtra("clery_id", model.getID());
+	        	  startActivity(intent);
 	      		}    
 	         
 	        });
-
-		
-		
-		
 	}
 }

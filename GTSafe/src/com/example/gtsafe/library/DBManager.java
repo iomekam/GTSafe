@@ -518,7 +518,7 @@ public class DBManager {
 				String text = c.getString(c
 						.getColumnIndex("ca_text"));
 
-				data = new CleryActModel(title, date, text);
+				data = new CleryActModel(caID, title, date, text);
 			} 
 			catch (ParseException e) 
 			{
