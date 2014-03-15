@@ -69,7 +69,6 @@ public class CrimeLogActivity extends Activity
 	CustomSpinner searchCrimes;
 	CharSequence result;
 	List<String> searchBy;
-	LinkedList<CrimeData> crimeDataHolder;
 	ArrayAdapter<CrimeData> adapter;
 
 	@Override
@@ -77,10 +76,9 @@ public class CrimeLogActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_log);
 		
-		crimeDataHolder = new LinkedList<CrimeData>();
 		adapter = new ArrayAdapter<CrimeData>(CrimeLogActivity.this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,
-				crimeDataHolder);
+				new LinkedList<CrimeData>());
 
 		crimes = (ListView) findViewById(R.id.crimeLog);
 		searchCrimes = (CustomSpinner) findViewById(R.id.filterDate);
@@ -96,7 +94,6 @@ public class CrimeLogActivity extends Activity
 			{
 				crimeData = list;
 				adapter.addAll(list);
-				crimeDataHolder.addAll(list);
 				crimes.setAdapter(adapter);
 				crimes.setTextFilterEnabled(true);
 				crimes.setOnItemClickListener(new OnItemClickListener()
@@ -151,7 +148,6 @@ public class CrimeLogActivity extends Activity
 						{
 							adapter.clear();
 							adapter.addAll(crimeData);
-							crimeDataHolder.addAll(crimeData);
 							adapter.notifyDataSetChanged();
 						}
 						else
@@ -188,7 +184,6 @@ public class CrimeLogActivity extends Activity
 						public void OnGet(List<CrimeData> list) 
 						{
 							adapter.addAll(list);
-							crimeDataHolder.addAll(list);
 							adapter.notifyDataSetChanged();
 						}
 					});
@@ -208,7 +203,6 @@ public class CrimeLogActivity extends Activity
 						@Override
 						public void OnGet(List<CrimeData> list) {
 							adapter.addAll(list);
-							crimeDataHolder.addAll(list);
 							adapter.notifyDataSetChanged();
 						}
 					});
