@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -130,6 +133,20 @@ if (mMap == null) {
 	              }
 	            }
             }
+            if(result!=-1){
+            	AlertDialog.Builder builder1 = new AlertDialog.Builder(CrimeMapActivity.this);
+            	builder1.setTitle("Zone " + result + " information");
+            	builder1.setMessage("Stuff will go here");
+            	builder1.setCancelable(true);
+            	builder1.setNeutralButton("Ok", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						arg0.dismiss();
+					} 
+            	});
+            	AlertDialog alert11 = builder1.create();
+            	alert11.show();
+            }
         }   
     }); 
 
@@ -150,10 +167,10 @@ if (mMap == null) {
                  "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                  .show();
     }
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 14));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 16));
 }
     else{
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 14));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 16));
 }
 	filterButt = (Button)findViewById(R.id.ok);
 	filterButt.setOnClickListener(new View.OnClickListener() {
