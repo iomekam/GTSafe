@@ -39,6 +39,20 @@ public class MapHelper {
 		            .strokeColor(Color.BLACK)
 		            .fillColor(Color.argb(50, 200, 0, 0)));
 				    
+//			    	double xcentroid = 0; 
+//			    	double ycentroid = 0;
+//				    List<LatLng> coords = zones.get(x).getLocation();
+//				    for(int i = 0; i < coords.size(); i++){
+//				    	xcentroid+= coords.get(i).latitude;
+//				    	ycentroid+= coords.get(i).longitude;
+//				    }
+//				    xcentroid = xcentroid/coords.size();
+//				    ycentroid = ycentroid/coords.size();
+//				    Marker zoneIterator = this.map.addMarker(new MarkerOptions()
+//                    .position(new LatLng(xcentroid, ycentroid))
+//                    .title("Zone: " + x)
+//                    .snippet("" + zones.get(x).getZoneInformation().getDescription()));
+				}
 			    	double xcentroid = 0; 
 			    	double ycentroid = 0;
 				    List<LatLng> coords = zones.get(x).getLocation();
@@ -146,5 +160,10 @@ public class MapHelper {
 	     .strokeColor(Color.RED)
 	     .fillColor(Color.BLUE));	
 		 return this.map; 
+	}
+	
+	public List getCrimeCount(){
+		
+		return crimes;
 	}
 }
