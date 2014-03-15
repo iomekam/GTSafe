@@ -11,6 +11,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
 	private TextView view;
 	private Button view_Button;
 	private Button data_Button;
-	private Button help_Button; // Omar created this.
+	private ImageButton help_Button; // Omar created this.
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +174,7 @@ public class MainActivity extends Activity {
 			 }
 			 });
 		
-		help_Button = (Button)findViewById(R.id.help);
+		help_Button = (ImageButton)findViewById(R.id.helpbutton);
 		help_Button.setOnClickListener(new View.OnClickListener() {
 			 @Override
 			 public void onClick(View v) {

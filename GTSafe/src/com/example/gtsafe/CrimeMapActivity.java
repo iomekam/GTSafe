@@ -112,12 +112,14 @@ if (mMap == null) {
         public void onMapClick(LatLng point) {
             int i;
             int j;
+            int result = -1;
             boolean finished = false;
             for (int x = 0; x < zones.size() && !finished; x++){
 	            for (i = 0, j = zones.get(x).getLocation().size() - 1; i < zones.get(x).getLocation().size(); j = i++) {
 	              if ((zones.get(x).getLocation().get(i).latitude > point.latitude) != (zones.get(x).getLocation().get(j).latitude > point.latitude) &&
 	                  (point.longitude < (zones.get(x).getLocation().get(j).longitude - zones.get(x).getLocation().get(i).longitude) * (point.latitude - zones.get(x).getLocation().get(i).latitude) / (zones.get(x).getLocation().get(j).latitude-zones.get(x).getLocation().get(i).latitude) +zones.get(x).getLocation().get(i).longitude)) {
 	                finished = true;
+	                result = x;
 	                break;
 	              }
 	            }

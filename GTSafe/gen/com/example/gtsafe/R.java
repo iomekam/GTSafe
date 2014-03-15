@@ -217,40 +217,48 @@ containing a value of this type.
         public static final int common_signin_btn_text_normal_light=0x7f020017;
         public static final int common_signin_btn_text_pressed_dark=0x7f020018;
         public static final int common_signin_btn_text_pressed_light=0x7f020019;
-        public static final int help1=0x7f02001a;
-        public static final int help2=0x7f02001b;
-        public static final int help3=0x7f02001c;
-        public static final int help4=0x7f02001d;
-        public static final int ic_launcher=0x7f02001e;
-        public static final int ic_plusone_medium_off_client=0x7f02001f;
-        public static final int ic_plusone_small_off_client=0x7f020020;
-        public static final int ic_plusone_standard_off_client=0x7f020021;
-        public static final int ic_plusone_tall_off_client=0x7f020022;
-        public static final int larceny=0x7f020023;
-        public static final int motorvehicle=0x7f020024;
-        public static final int murder=0x7f020025;
-        public static final int noncrime=0x7f020026;
-        public static final int part2=0x7f020027;
-        public static final int rape=0x7f020028;
-        public static final int robbery=0x7f020029;
+        public static final int filter=0x7f02001a;
+        public static final int help1=0x7f02001b;
+        public static final int help2=0x7f02001c;
+        public static final int help3=0x7f02001d;
+        public static final int help4=0x7f02001e;
+        public static final int ic_launcher=0x7f02001f;
+        public static final int ic_plusone_medium_off_client=0x7f020020;
+        public static final int ic_plusone_small_off_client=0x7f020021;
+        public static final int ic_plusone_standard_off_client=0x7f020022;
+        public static final int ic_plusone_tall_off_client=0x7f020023;
+        public static final int larceny=0x7f020024;
+        public static final int motorvehicle=0x7f020025;
+        public static final int murder=0x7f020026;
+        public static final int noncrime=0x7f020027;
+        public static final int part2=0x7f020028;
+        public static final int questionmark=0x7f020029;
+        public static final int rape=0x7f02002a;
+        public static final int robbery=0x7f02002b;
+        public static final int roundbutton=0x7f02002c;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f06000a;
-        public static final int action_settings=0x7f06001b;
+        public static final int action_settings=0x7f060020;
         public static final int cleryact=0x7f060005;
         public static final int content=0x7f060012;
         public static final int crimeLog=0x7f060008;
-        public static final int crime_date=0x7f060018;
-        public static final int crime_details=0x7f06001a;
-        public static final int crime_location=0x7f060019;
+        public static final int crime_date=0x7f06001d;
+        public static final int crime_details=0x7f06001f;
+        public static final int crime_location=0x7f06001e;
         public static final int currDate=0x7f060015;
         public static final int data_button2=0x7f06000e;
         public static final int filterDate=0x7f060007;
         public static final int flipper=0x7f06000b;
         public static final int handle=0x7f060013;
-        public static final int help=0x7f06000f;
+        public static final int helpbutton=0x7f06000f;
         public static final int hybrid=0x7f060004;
+        public static final int imageButton1=0x7f060016;
         public static final int layout1=0x7f060006;
+        public static final int list_date=0x7f060018;
+        public static final int list_description=0x7f06001b;
+        public static final int list_lat_lang=0x7f060019;
+        public static final int list_loc=0x7f06001a;
         public static final int map=0x7f060010;
         public static final int map_button=0x7f06000d;
         public static final int mySimpleXYPlot=0x7f060009;
@@ -261,8 +269,8 @@ containing a value of this type.
         public static final int slidingDrawer1=0x7f060011;
         public static final int terrain=0x7f060003;
         public static final int textView1=0x7f06000c;
-        public static final int title=0x7f060017;
-        public static final int webView1=0x7f060016;
+        public static final int title=0x7f06001c;
+        public static final int webView1=0x7f060017;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f080000;
@@ -276,8 +284,10 @@ containing a value of this type.
         public static final int activity_main=0x7f030005;
         public static final int activity_map=0x7f030006;
         public static final int activity_single_list_item=0x7f030007;
-        public static final int fragment_help=0x7f030008;
-        public static final int infowindow=0x7f030009;
+        public static final int dialogboxy=0x7f030008;
+        public static final int dialoglayout=0x7f030009;
+        public static final int fragment_help=0x7f03000a;
+        public static final int infowindow=0x7f03000b;
     }
     public static final class menu {
         public static final int clery_act=0x7f0b0000;

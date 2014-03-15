@@ -48,9 +48,10 @@
         android:id="@+id/imageButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/currDate"
-        android:src="@drawable/filter"
-        android:background="@drawable/roundbutton" />
+        android:layout_marginTop="48dp"
+        android:background="@drawable/roundbutton"
+        android:src="@drawable/filter" />
 
 </RelativeLayout>

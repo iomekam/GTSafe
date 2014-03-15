@@ -4,38 +4,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/list_date"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:text="TextView" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/list_lat_lang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:textColor="@android:color/black"
-        android:textSize="13sp"
-        android:textStyle="bold" />
-        <TextView
-        android:id="@+id/crime_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:textColor="@android:color/black"
-        android:textSize="10sp"/>
+        android:textSize="17sp"
+        android:text="TextView" />
 
     <TextView
-        android:id="@+id/crime_location"
+        android:id="@+id/list_loc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:textColor="@android:color/black"
-        android:textSize="10sp"/>
+        android:textSize="17sp"
+        android:text="TextView" />
 
-        <TextView
-        android:id="@+id/crime_details"
+    <TextView
+        android:id="@+id/list_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:paddingBottom="6dp"
-        android:textColor="@android:color/black"
-        android:textSize="10sp"/>
-    
+        android:textSize="17sp"
+        android:text="TextView" />
+
 </LinearLayout>

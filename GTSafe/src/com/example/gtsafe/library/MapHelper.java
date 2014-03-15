@@ -53,22 +53,9 @@ public class MapHelper {
 //                    .title("Zone: " + x)
 //                    .snippet("" + zones.get(x).getZoneInformation().getDescription()));
 				}
-			    	double xcentroid = 0; 
-			    	double ycentroid = 0;
-				    List<LatLng> coords = zones.get(x).getLocation();
-				    for(int i = 0; i < coords.size(); i++){
-				    	xcentroid+= coords.get(i).latitude;
-				    	ycentroid+= coords.get(i).longitude;
-				    }
-				    xcentroid = xcentroid/coords.size();
-				    ycentroid = ycentroid/coords.size();
-				    this.map.addMarker(new MarkerOptions()
-                    .position(new LatLng(xcentroid, ycentroid))
-                    .title("Zone: " + x)
-                    .snippet("" + zones.get(x).getZoneInformation().getDescription()));
 				}
 			}
-		}
+		
 		
 		return this.map;
 	}
