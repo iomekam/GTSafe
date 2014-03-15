@@ -76,7 +76,6 @@ public class CrimeLogActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_log);
 		
-		final Context context = getApplicationContext();
 		crimeDataHolder = new LinkedList<CrimeData>();
 		adapter = new ArrayAdapter<CrimeData>(CrimeLogActivity.this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,
@@ -87,7 +86,7 @@ public class CrimeLogActivity extends Activity
 		
 		final ArrayAdapter<Search> spinnerArrayAdapter = new ArrayAdapter<Search>(
 				this, android.R.layout.simple_spinner_item, Search.values());
-
+		
 		// were gonna start of the list view with all of the crime data
 		db.getAllCrimeData(new OnDBGetListener<CrimeData>() 
 		{
@@ -102,13 +101,13 @@ public class CrimeLogActivity extends Activity
 				crimes.setOnItemClickListener(new OnItemClickListener()
 				{
 					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
+					public void onItemClick(AdapterView<?> arg0, View view,
 							int position, long id) 
 					{
-						AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-						String view= crimes.getChildAt(position).toString();
-						alertDialog.setTitle("Crime Info");
-						alertDialog.setMessage(view);
+						AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
+						CrimeData crime = (CrimeData)crimes.getItemAtPosition(position);
+						alertDialog.setTitle(crime.getOffense().toString());
+						alertDialog.setMessage(crime.toString());
 						alertDialog.show();
 					}	
 				});
