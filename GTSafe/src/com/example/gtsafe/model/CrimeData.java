@@ -3,11 +3,15 @@ package com.example.gtsafe.model;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+import com.example.gtsafe.library.listeners.interfaces.Listable;
 import com.google.android.gms.maps.model.LatLng;
 
-public class CrimeData implements java.io.Serializable
+public class CrimeData implements java.io.Serializable, Listable
 {
 	/**
 	 * 
@@ -56,7 +60,8 @@ public class CrimeData implements java.io.Serializable
 	}
 	
 	public String toString(){
-		return "Crime Date "+date.toString();
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+		return formatter.format(date) + "\t" + offenseDesc;
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
@@ -69,4 +74,9 @@ public class CrimeData implements java.io.Serializable
         in.defaultReadObject();
         location = new LatLng(in.readDouble(), in.readDouble());
     }
+
+	@Override
+	public String listString() {
+		return toString();
+	}
 }

@@ -34,6 +34,7 @@ public class CleryActModel
 		return id;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String toString()
 	{
 		return date.toLocaleString() + " -- " + title;

@@ -19,7 +19,6 @@ import android.util.Log;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
-import com.example.gtsafe.model.CleryActModel;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
@@ -27,11 +26,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateAllCrimeDataListener implements OnGetJSONListener 
 {
-	private OnDBUpdateListener<List<CrimeData>> listener;
+	private List<OnDBUpdateListener<List<CrimeData>>> listener;
 	
-	public UpdateAllCrimeDataListener(OnDBUpdateListener<List<CrimeData>> listener)
+	public UpdateAllCrimeDataListener(List<OnDBUpdateListener<List<CrimeData>>> allCrimeDataListener)
 	{
-		this.listener = listener;
+		this.listener = allCrimeDataListener;
 	}
 
 	@Override
@@ -103,7 +102,10 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 			DBManager.getInstance().getAllCrimeData(null);
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<List<CrimeData>> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 			else
 			{

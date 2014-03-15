@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -22,11 +23,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateCrimeDataListener implements OnGetJSONListener
 {
-	private OnDBUpdateListener<CrimeData> listener;
+	private List<OnDBUpdateListener<CrimeData>> listener;
 	
-	public UpdateCrimeDataListener(OnDBUpdateListener<CrimeData> listener)
+	public UpdateCrimeDataListener(List<OnDBUpdateListener<CrimeData>> crimeDataListener)
 	{
-		this.listener = listener;
+		this.listener = crimeDataListener;
 	}
 
 	@Override
@@ -89,7 +90,10 @@ public class UpdateCrimeDataListener implements OnGetJSONListener
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<CrimeData> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 		}
 	}

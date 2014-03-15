@@ -1,14 +1,12 @@
 package com.example.gtsafe;
 
-import com.example.gtsafe.library.DBManager;
-import com.example.gtsafe.model.CleryActModel;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
+import android.os.Bundle;
 import android.webkit.WebView;
-import android.widget.TextView;
+
+import com.example.gtsafe.library.DBManager;
+import com.example.gtsafe.model.CleryActModel;
 
 public class SingleListItem extends Activity {
 

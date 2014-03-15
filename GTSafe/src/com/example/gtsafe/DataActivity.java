@@ -1,16 +1,15 @@
 package com.example.gtsafe;
 
-import android.os.Bundle;
-import android.app.Activity;
 import android.app.TabActivity;
-import android.view.Menu;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
 import android.widget.TabHost;
 
 
+@SuppressWarnings("deprecation")
 public class DataActivity extends TabActivity {
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

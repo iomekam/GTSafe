@@ -4,6 +4,10 @@ package com.example.gtsafe;
 import java.util.Arrays;
 import java.util.List;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -14,13 +18,6 @@ import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-import android.view.WindowManager;
-import android.widget.Toast;
-
 
 public class CrimeStatActivity extends Activity {
 	private XYPlot plot;
@@ -43,8 +40,8 @@ public class CrimeStatActivity extends Activity {
 		});
 		// fun little snippet that prevents users from taking screenshots
         // on ICS+ devices :-)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                                 WindowManager.LayoutParams.FLAG_SECURE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                                // WindowManager.LayoutParams.FLAG_SECURE);
  
  
         // initialize our XYPlot reference:

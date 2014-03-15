@@ -14,15 +14,16 @@ import android.util.Log;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.ZoneData;
 import com.example.gtsafe.model.ZoneInfo;
 
 public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 
-	private OnDBUpdateListener<List<ZoneInfo>> listener;
+	private List<OnDBUpdateListener<List<ZoneInfo>>> listener;
 	
-	public UpdateAllZoneInfoListener(OnDBUpdateListener<List<ZoneInfo>> listener)
+	public UpdateAllZoneInfoListener(List<OnDBUpdateListener<List<ZoneInfo>>> allZoneInfoListener)
 	{
-		this.listener = listener;
+		this.listener = allZoneInfoListener;
 	}
 
 	@Override
@@ -69,8 +70,13 @@ public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 
 		public void onPostExecute(List<ZoneInfo> result) {
 			if (listener != null) {
-				listener.OnUpdate(result);
-			} else {
+				for(OnDBUpdateListener<List<ZoneInfo>> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
+			} 
+			else 
+			{
 				Log.e("ZInfo:", "Done");
 			}
 		}

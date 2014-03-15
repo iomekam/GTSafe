@@ -18,10 +18,10 @@ import com.example.gtsafe.model.ZoneData;
 
 public class UpdateAllZoneListener implements OnGetJSONListener
 {
-	OnDBUpdateListener<List<ZoneData>> listener;
-	public UpdateAllZoneListener(OnDBUpdateListener<List<ZoneData>> listener)
+	List<OnDBUpdateListener<List<ZoneData>>> listener;
+	public UpdateAllZoneListener(List<OnDBUpdateListener<List<ZoneData>>> allZoneListener)
 	{
-		this.listener = listener;
+		this.listener = allZoneListener;
 	}
 	
 	@Override
@@ -71,7 +71,10 @@ public class UpdateAllZoneListener implements OnGetJSONListener
 			DBManager.getInstance().updateAllZoneInfo();
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<List<ZoneData>> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 			else
 			{

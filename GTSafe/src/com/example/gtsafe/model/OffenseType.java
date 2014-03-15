@@ -1,6 +1,8 @@
 package com.example.gtsafe.model;
 
-public enum OffenseType 
+import com.example.gtsafe.library.listeners.interfaces.Listable;
+
+public enum OffenseType implements Listable
 {
 	HOMICIDE("HOMICIDE", 1), RAPE("RAPE", 1), ROBBERY("ROBBERY", 1), AGG_ASSAULT("AGG ASLT", 1), BURGLARY("BURGLARY", 1), LARCENY("LARCENY", 1),
 	AUTO_THEFT("AUTO THEFT", 1), ARSON("ARSON", 1), OTHER_ASSAULTS("OTHER ASSAULTS", 2), FORGERY("FORGERY", 2), FRAUD("FRAUD", 2), 
@@ -29,6 +31,8 @@ public enum OffenseType
 			}
 		}
 		
+	
+		
 		return ALL_OTHER_OFFENSES;
 	}
 	
@@ -44,6 +48,11 @@ public enum OffenseType
 	
 	public String toString()
 	{
+		return name;
+	}
+
+	@Override
+	public String listString() {
 		return name;
 	}
 }

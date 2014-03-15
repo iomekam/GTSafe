@@ -2,6 +2,7 @@ package com.example.gtsafe;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,14 +11,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +28,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
-import java.util.StringTokenizer;
 public class CrimeMapActivity extends Activity {
 private GoogleMap mMap;
 private MapHelper helper;
-private SlidingDrawer slider;
 private Button filterButt;
 private LatLngBounds coords = new LatLngBounds(
     new LatLng(33.770836, -84.407272), new LatLng(33.786638, -84.390492));
@@ -121,13 +112,11 @@ if (mMap == null) {
         public void onMapClick(LatLng point) {
             int i;
             int j;
-            int result = -1;
             boolean finished = false;
             for (int x = 0; x < zones.size() && !finished; x++){
 	            for (i = 0, j = zones.get(x).getLocation().size() - 1; i < zones.get(x).getLocation().size(); j = i++) {
 	              if ((zones.get(x).getLocation().get(i).latitude > point.latitude) != (zones.get(x).getLocation().get(j).latitude > point.latitude) &&
 	                  (point.longitude < (zones.get(x).getLocation().get(j).longitude - zones.get(x).getLocation().get(i).longitude) * (point.latitude - zones.get(x).getLocation().get(i).latitude) / (zones.get(x).getLocation().get(j).latitude-zones.get(x).getLocation().get(i).latitude) +zones.get(x).getLocation().get(i).longitude)) {
-	                result = x;
 	                finished = true;
 	                break;
 	              }

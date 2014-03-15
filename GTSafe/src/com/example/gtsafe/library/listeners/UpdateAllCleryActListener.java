@@ -23,11 +23,11 @@ import com.example.gtsafe.model.CleryActModel;
 
 public class UpdateAllCleryActListener implements OnGetJSONListener 
 {
-	private OnDBUpdateListener<List<CleryActModel>> listener;
+	private List<OnDBUpdateListener<List<CleryActModel>>> listener;
 	
-	public UpdateAllCleryActListener(OnDBUpdateListener<List<CleryActModel>> listener)
+	public UpdateAllCleryActListener(List<OnDBUpdateListener<List<CleryActModel>>> allCleryActListener)
 	{
-		this.listener = listener;
+		this.listener = allCleryActListener;
 	}
 
 	@Override
@@ -91,7 +91,10 @@ public class UpdateAllCleryActListener implements OnGetJSONListener
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<List<CleryActModel>> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 			else
 			{
