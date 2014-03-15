@@ -34,13 +34,15 @@
         android:layout_marginTop="46dp"
         android:text="Data View" />
 
-    <Button
-        android:id="@+id/help"
+
+
+    <ImageButton
+        android:id="@+id/helpbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/map_button"
-        android:layout_below="@+id/map_button"
-        android:layout_marginTop="62dp"
-        android:text="Help" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/questionmark"
+        android:background="@drawable/roundbutton" />
 
 </RelativeLayout>

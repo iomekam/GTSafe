@@ -1,5 +1,7 @@
 package com.example.gtsafe;
 
+import java.sql.Date;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,10 +18,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.Listable;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
+import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
@@ -97,6 +101,7 @@ public class CrimeLogActivity extends Activity
 				crimes.setTextFilterEnabled(true);
 				crimes.setOnItemClickListener(new OnItemClickListener()
 				{
+					@SuppressWarnings("deprecation")
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View view,
 							int position, long id) 
@@ -104,7 +109,28 @@ public class CrimeLogActivity extends Activity
 						AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
 						CrimeData crime = (CrimeData)crimes.getItemAtPosition(position);
 						alertDialog.setTitle(crime.getOffense().toString());
-						alertDialog.setMessage(crime.toString());
+						View v = getLayoutInflater().inflate(R.layout.dialogboxy, null);
+						alertDialog.setView(v);
+						
+			            TextView dates = (TextView) v.findViewById(R.id.list_date);
+			            TextView latlngs = (TextView) v.findViewById(R.id.list_lat_lang);
+			            TextView locs = (TextView) v.findViewById(R.id.list_loc);
+			            TextView descriptions = (TextView) v.findViewById(R.id.list_description);
+			            
+			            dates.setText("Date: " + crime.getDate().toLocaleString());
+			            latlngs.setText("GPS Location: " + "(" + crime.getLocation().latitude + ", " + crime.getLocation().longitude + ")");
+			            locs.setText("Location: " + crime.getLocationName());
+			            descriptions.setText("Description: " + crime.getOffenseDescription());	
+			            alertDialog.setCancelable(true);
+			            alertDialog.setButton("Dismiss", new OnClickListener(){
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+								arg0.dismiss();
+							}
+			            	
+			            });
 						alertDialog.show();
 					}	
 				});
@@ -141,6 +167,31 @@ public class CrimeLogActivity extends Activity
 				});
 				
 				// crimes.setFilterText((String) result);
+			}
+		});
+		
+		DBManager.getInstance().setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
+		{
+			@Override
+			public void OnUpdate(CrimeData item) {
+				int position = crimes.getSelectedItemPosition();
+				
+				adapter.insert(item, 0);
+				adapter.sort(new Comparator<CrimeData>(){
+					@Override
+					public int compare(CrimeData arg0, CrimeData arg1) {
+						return arg1.getDate().compareTo(arg0.getDate()); //Descending
+					}
+				});
+				
+				crimes.setSelection(position);
+				
+				runOnUiThread(new Runnable() {
+			        @Override
+			        public void run() {
+			                adapter.notifyDataSetChanged();
+			        }
+			    });
 			}
 		});
 	}
