@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -126,7 +125,6 @@ public class CrimeLogActivity extends Activity
 					public void onItemSelected(AdapterView<?> arg0, View arg1,
 							int position, long id) 
 					{
-						Log.e("gg", "hit");
 						Search type = (Search)searchCrimes.getItemAtPosition(position);
 						if(type == Search.ALL)
 						{

@@ -26,11 +26,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateAllCrimeDataListener implements OnGetJSONListener 
 {
-	private OnDBUpdateListener<List<CrimeData>> listener;
+	private List<OnDBUpdateListener<List<CrimeData>>> listener;
 	
-	public UpdateAllCrimeDataListener(OnDBUpdateListener<List<CrimeData>> listener)
+	public UpdateAllCrimeDataListener(List<OnDBUpdateListener<List<CrimeData>>> allCrimeDataListener)
 	{
-		this.listener = listener;
+		this.listener = allCrimeDataListener;
 	}
 
 	@Override
@@ -102,7 +102,10 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 			DBManager.getInstance().getAllCrimeData(null);
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<List<CrimeData>> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 			else
 			{

@@ -1,5 +1,7 @@
 package com.example.gtsafe.library.listeners;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,10 +15,10 @@ import com.example.gtsafe.model.ZoneData;
 
 public class UpdateZoneListener implements OnGetJSONListener
 {
-	OnDBUpdateListener<ZoneData> listener;
-	public UpdateZoneListener(OnDBUpdateListener<ZoneData> listener)
+	List<OnDBUpdateListener<ZoneData>> listener;
+	public UpdateZoneListener(List<OnDBUpdateListener<ZoneData>> zoneListener)
 	{
-		this.listener = listener;
+		this.listener = zoneListener;
 	}
 	@Override
 	public void OnGetJSON(JSONObject jObj) throws JSONException {
@@ -54,7 +56,10 @@ public class UpdateZoneListener implements OnGetJSONListener
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<ZoneData> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 		}
 	}

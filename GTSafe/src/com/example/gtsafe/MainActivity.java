@@ -19,9 +19,11 @@ import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.gcm.Gcm;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
+import com.example.gtsafe.model.CleryActModel;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
+import com.example.gtsafe.model.ZoneInfo;
 
 public class MainActivity extends Activity {
 	private String s = "";
@@ -44,6 +46,27 @@ public class MainActivity extends Activity {
 		gcm.initGCM();
 		
 		final DBManager db = DBManager.getInstance();
+		
+		db.setOnAllCleryActUpdateEventListener(new OnDBUpdateListener<List<CleryActModel>>()
+		{
+			@Override
+			public void OnUpdate(List<CleryActModel> updatedItem) {
+				s = s + "Clery Acts: Done\n";
+				view.setText(s);
+			}
+			
+		});
+		
+		db.setOnAllZoneInfoUpdateEventListener(new OnDBUpdateListener<List<ZoneInfo>>()
+		{
+
+			@Override
+			public void OnUpdate(List<ZoneInfo> updatedItem) {
+				s = s + "Zone Info: Done\n";
+				view.setText(s);
+			}
+
+		});
 		
 		db.setOnAllZoneUpdateEventListener(new OnDBUpdateListener<List<ZoneData>>()
 		{
@@ -107,8 +130,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void OnGet(List<CrimeData> list) {
 				view.setText("Crimes by Date: " + list.size());
-				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
-						   Toast.LENGTH_LONG).show();
 			}
 		});
 		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
@@ -116,8 +137,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void OnGet(List<CrimeData> list) {
 				view.setText("Crimes by Type: " + list.size());
-				Toast.makeText(getApplicationContext(), "Crimes Length: " + list.size(),
-						   Toast.LENGTH_LONG).show();
 			}
 		});
 		

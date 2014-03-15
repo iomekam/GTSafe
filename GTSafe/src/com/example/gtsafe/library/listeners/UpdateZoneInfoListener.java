@@ -1,6 +1,8 @@
 package com.example.gtsafe.library.listeners;
 
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,15 +12,16 @@ import android.os.AsyncTask;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
+import com.example.gtsafe.model.ZoneData;
 import com.example.gtsafe.model.ZoneInfo;
 
 public class UpdateZoneInfoListener implements OnGetJSONListener {
 
-	private OnDBUpdateListener<ZoneInfo> listener;
+	private List<OnDBUpdateListener<ZoneInfo>> listener;
 	
-	public UpdateZoneInfoListener(OnDBUpdateListener<ZoneInfo> listener)
+	public UpdateZoneInfoListener(List<OnDBUpdateListener<ZoneInfo>> zoneInfoListener)
 	{
-		this.listener = listener;
+		this.listener = zoneInfoListener;
 	}
 
 	@Override
@@ -59,7 +62,10 @@ public class UpdateZoneInfoListener implements OnGetJSONListener {
 	{
 		if(listener != null)
 		{
-			listener.OnUpdate(result);
+			for(OnDBUpdateListener<ZoneInfo> lis: listener)
+			{
+				lis.OnUpdate(result);
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -16,14 +17,15 @@ import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
 import com.example.gtsafe.model.CleryActModel;
+import com.example.gtsafe.model.ZoneData;
 
 public class UpdateCleryActListener implements OnGetJSONListener 
 {
-	private OnDBUpdateListener<CleryActModel> listener;
+	private List<OnDBUpdateListener<CleryActModel>> listener;
 	
-	public UpdateCleryActListener(OnDBUpdateListener<CleryActModel> listener)
+	public UpdateCleryActListener(List<OnDBUpdateListener<CleryActModel>> cleryActListener)
 	{
-		this.listener = listener;
+		this.listener = cleryActListener;
 	}
 
 	@Override
@@ -78,7 +80,10 @@ public class UpdateCleryActListener implements OnGetJSONListener
 		{
 			if(listener != null)
 			{
-				listener.OnUpdate(result);
+				for(OnDBUpdateListener<CleryActModel> lis: listener)
+				{
+					lis.OnUpdate(result);
+				}
 			}
 		}
 	}

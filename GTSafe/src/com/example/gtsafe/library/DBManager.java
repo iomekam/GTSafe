@@ -61,20 +61,18 @@ public class DBManager {
 	private Hashtable<String, List<CrimeData>> table = new Hashtable<String, List<CrimeData>>();
 	private Context context;
 	private String FILENAME = "table.ht";
-	;
-	private OnDBUpdateListener<ZoneData> zoneListener;
-	private OnDBUpdateListener<List<ZoneData>> allZoneListener;
-	private OnDBUpdateListener<CrimeData> crimeDataListener;
-	private OnDBUpdateListener<List<CrimeData>> allCrimeDataListener;
-	private OnDBUpdateListener<ZoneInfo> zoneInfoListener;
-	private OnDBUpdateListener<List<ZoneInfo>> allZoneInfoListener;
+
+	private List<OnDBUpdateListener<ZoneData>> zoneListener = new LinkedList<OnDBUpdateListener<ZoneData>>();
+	private List<OnDBUpdateListener<List<ZoneData>>> allZoneListener = new LinkedList<OnDBUpdateListener<List<ZoneData>>>();
+	private List<OnDBUpdateListener<CrimeData>> crimeDataListener = new LinkedList<OnDBUpdateListener<CrimeData>>();
+	private List<OnDBUpdateListener<List<CrimeData>>> allCrimeDataListener = new LinkedList<OnDBUpdateListener<List<CrimeData>>>();
+	private List<OnDBUpdateListener<ZoneInfo>> zoneInfoListener = new LinkedList<OnDBUpdateListener<ZoneInfo>>();
+	private List<OnDBUpdateListener<List<ZoneInfo>>> allZoneInfoListener = new LinkedList<OnDBUpdateListener<List<ZoneInfo>>>();
+	private List<OnDBUpdateListener<CleryActModel>> cleryActListener = new LinkedList<OnDBUpdateListener<CleryActModel>>();
+	private List<OnDBUpdateListener<List<CleryActModel>>> allCleryActListener = new LinkedList<OnDBUpdateListener<List<CleryActModel>>>();
 	
 	private boolean useDefaultDB;
 	public boolean write = false;
-
-	private OnDBUpdateListener<CleryActModel> cleryActListener;
-
-	private OnDBUpdateListener<List<CleryActModel>> allCleryActListener;
 
 	public static synchronized void initializeInstance(SQLiteOpenHelper helper, Context context) {
 		if (instance == null) {
@@ -210,7 +208,7 @@ public class DBManager {
 	}
 
 	public void setOnAllZoneUpdateEventListener(OnDBUpdateListener<List<ZoneData>> listener) {
-		this.allZoneListener = listener;
+		this.allZoneListener.add(listener);
 	}
 
 	public void updateZone(int zoneIDServer) {
@@ -224,7 +222,7 @@ public class DBManager {
 	}
 
 	public void setOnZoneUpdateEventListener(OnDBUpdateListener<ZoneData> listener) {
-		this.zoneListener = listener;
+		this.zoneListener.add(listener);
 	}
 	
 	public void updateZoneInfo(int zoneInfoID)
@@ -240,7 +238,7 @@ public class DBManager {
 	}
 	
 	public void setOnZoneInfoUpdateEventListener(OnDBUpdateListener<ZoneInfo> listener) {
-		this.zoneInfoListener = listener;
+		this.zoneInfoListener.add(listener);
 	}
 	
 	public void updateAllZoneInfo() {
@@ -253,7 +251,7 @@ public class DBManager {
 	}
 
 	public void setOnAllZoneInfoUpdateEventListener(OnDBUpdateListener<List<ZoneInfo>> listener) {
-		this.allZoneInfoListener = listener;
+		this.allZoneInfoListener.add(listener);
 	}
 	
 	public void updateCleryAct(int caID)
@@ -270,20 +268,20 @@ public class DBManager {
 	
 	public void setOnCleryActUpdateListener(OnDBUpdateListener<CleryActModel> listener)
 	{
-		this.cleryActListener = listener;
+		this.cleryActListener.add(listener);
 	}
 	
 	public void updateAllCleryAct() {
 		request = new DBRequester();
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("tag", "get_clery_act"));
-
+		
 		request.setOnJSONEventListener(new UpdateAllCleryActListener(allCleryActListener));
 		request.getJSON(params);
 	}
 
 	public void setOnAllCleryActUpdateEventListener(OnDBUpdateListener<List<CleryActModel>> listener) {
-		this.allCleryActListener = listener;
+		this.allCleryActListener.add(listener);
 	}
 
 	public void updateCrimeData(int crimeID) {
@@ -298,7 +296,7 @@ public class DBManager {
 	}
 
 	public void setOnCrimeUpdateEventListener(OnDBUpdateListener<CrimeData> listener) {
-		this.crimeDataListener = listener;
+		this.crimeDataListener.add(listener);
 	}
 
 	public void updateAllCrimes() {
@@ -314,7 +312,7 @@ public class DBManager {
 	}
 
 	public void setOnAllCrimeUpdateEventListener(OnDBUpdateListener<List<CrimeData>> listener) {
-		this.allCrimeDataListener = listener;
+		this.allCrimeDataListener.add(listener);
 	}
 
 	public ZoneData getZone(int zoneID) {
@@ -459,7 +457,7 @@ public class DBManager {
 					List<CrimeData> crimeList = new LinkedList<CrimeData>();
 	
 					SQLiteDatabase db = instance.openDatabase();
-					String selectQuery = "SELECT crime_id FROM crime_data";
+					String selectQuery = "SELECT crime_id FROM crime_data ORDER BY crime_date DESC";
 					Cursor c = db.rawQuery(selectQuery, null);
 	
 					boolean hasNext = c.moveToFirst();
@@ -559,7 +557,7 @@ public class DBManager {
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE zone_id = " + zoneID;
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE zone_id = " + zoneID + " ORDER BY crime_date DESC";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();
@@ -590,7 +588,8 @@ public class DBManager {
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE crime_date BETWEEN '" + date.toString() + "' AND date('now')";
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE crime_date BETWEEN '" + date.toString() + "' AND date('now')" +
+										"ORDER BY crime_date DESC";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();
@@ -622,7 +621,7 @@ public class DBManager {
 
 				SQLiteDatabase db = instance.openDatabase();
 				String selectQuery = "SELECT crime_id FROM crime_data WHERE crime_date BETWEEN '" + date.toString() + "' AND '" 
-										+ dateB.toString() + "'";
+										+ dateB.toString() + "' ORDER BY crime_date DESC";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();
@@ -653,7 +652,7 @@ public class DBManager {
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "'";
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "' ORDER BY crime_date DESC";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();
@@ -684,7 +683,8 @@ public class DBManager {
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
-				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "' AND zone_id = " + zoneID;
+				String selectQuery = "SELECT crime_id FROM crime_data WHERE offense = '" + type.toString() + "' AND zone_id = " + zoneID + 
+										" ORDER BY crime_date DESC";
 
 				Cursor c = db.rawQuery(selectQuery, null);
 				boolean hasNext = c.moveToFirst();
