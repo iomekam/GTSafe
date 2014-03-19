@@ -12,9 +12,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.gtsafe.library.DBManager;
+import com.example.gtsafe.library.DBManager.TableEntry;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
 import com.example.gtsafe.model.ZoneData;
+import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateAllZoneListener implements OnGetJSONListener
 {
@@ -36,6 +38,7 @@ public class UpdateAllZoneListener implements OnGetJSONListener
 		protected List<ZoneData> doInBackground(JSONObject... params)
 		{
 			JSONObject object = params[0];
+			List<LatLng> latList = new LinkedList<LatLng>();
 			
 			ContentValues val = new ContentValues();
 			JSONArray jArray = null;
@@ -52,7 +55,17 @@ public class UpdateAllZoneListener implements OnGetJSONListener
 					int zoneID = jObj.getInt("zone_id");
 					String points = jObj.getString("points");
 					
-					list.add(new ZoneData(null, zoneID, null));
+					JSONArray jArr = new JSONObject(points).getJSONArray("points");
+
+					for (int j = 0; j < jArr.length(); j++) {
+						JSONObject obj = jArr.getJSONObject(j);
+						double lat = obj.getDouble("lat");
+						double lon = obj.getDouble("lon");
+
+						latList.add(new LatLng(lat, lon));
+					}
+					
+					list.add(new ZoneData(latList, zoneID, null));
 					
 					val.put("zone_id", zoneID);
 					val.put("points", points);
@@ -67,8 +80,21 @@ public class UpdateAllZoneListener implements OnGetJSONListener
 		}
 		
 		public void onPostExecute(List<ZoneData> result)
-		{
+		{	
+			DBManager.getInstance().initCount++;
 			DBManager.getInstance().updateAllZoneInfo();
+			
+			if(DBManager.getInstance().runningInit)
+			{
+				DBManager.getInstance().initCount--;
+				
+				if(DBManager.getInstance().initCount == 0 && DBManager.getInstance().initDialog != null)
+				{
+					DBManager.getInstance().initDialog.dismiss();
+					DBManager.getInstance().runningInit = false;
+				}
+			}
+			
 			if(listener != null)
 			{
 				for(OnDBUpdateListener<List<ZoneData>> lis: listener)

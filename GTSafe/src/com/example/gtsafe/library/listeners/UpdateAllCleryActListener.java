@@ -89,6 +89,17 @@ public class UpdateAllCleryActListener implements OnGetJSONListener
 		
 		public void onPostExecute(List<CleryActModel> result)
 		{
+			if(DBManager.getInstance().runningInit)
+			{
+				DBManager.getInstance().initCount--;
+				
+				if(DBManager.getInstance().initCount == 0 && DBManager.getInstance().initDialog != null)
+				{
+					DBManager.getInstance().initDialog.dismiss();
+					DBManager.getInstance().runningInit = false;
+				}
+			}
+			
 			if(listener != null)
 			{
 				for(OnDBUpdateListener<List<CleryActModel>> lis: listener)

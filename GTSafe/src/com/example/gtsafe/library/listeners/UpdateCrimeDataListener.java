@@ -14,6 +14,7 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 
 import com.example.gtsafe.library.DBManager;
+import com.example.gtsafe.library.DBManager.TableEntry;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
 import com.example.gtsafe.model.CrimeData;
@@ -63,12 +64,11 @@ public class UpdateCrimeDataListener implements OnGetJSONListener
 				Date d = null;
 				try {
 					d = format.parse(date);
-					crime = new CrimeData(new LatLng(lat,lon), location, d, OffenseType.ALL_OTHER_OFFENSES.getOffenseType(offense), 
-								offenseDesc, new ZoneData(null, zoneID, null));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					crime = new CrimeData(new LatLng(lat,lon), location, d, OffenseType.getOffenseType(offense), 
+								offenseDesc, DBManager.getInstance().getZone(zoneID));
+					//DBManager.getInstance().insertTable(TableEntry.CRIMES_ALL, crime);
+					
+				} catch (ParseException e) {}
 				
 				val.put("crime_id", crimeID);
 				val.put("offense", offense);

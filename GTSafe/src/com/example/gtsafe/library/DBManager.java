@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -24,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -33,6 +36,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.gtsafe.MainActivity;
 import com.example.gtsafe.library.listeners.UpdateAllCleryActListener;
 import com.example.gtsafe.library.listeners.UpdateAllCrimeDataListener;
 import com.example.gtsafe.library.listeners.UpdateAllZoneInfoListener;
@@ -58,7 +62,8 @@ public class DBManager {
 	private SQLiteDatabase db;
 	private DBRequester request;
 	
-	private Hashtable<String, List<CrimeData>> table = new Hashtable<String, List<CrimeData>>();
+	//private Hashtable<String, Hashtable<String, List<CrimeData>>> table = new Hashtable<String, Hashtable<String, List<CrimeData>>>();
+	
 	private Context context;
 	private String FILENAME = "table.ht";
 
@@ -72,14 +77,26 @@ public class DBManager {
 	private List<OnDBUpdateListener<List<CleryActModel>>> allCleryActListener = new LinkedList<OnDBUpdateListener<List<CleryActModel>>>();
 	
 	private boolean useDefaultDB;
-	public boolean write = false;
+	
+	public enum TableEntry{ CRIMES_ALL, CRIMES_TYPE, CRIMES_ZONE };
+	
+	public String crimeAllEntry = "get_all_crime";
+	public String crimeTypeEntry = "get_all_crime_type";
+	public String crimeZoneEntry = "get_all_crime_zone";
+	
+	public boolean runningInit = false;
+	public int initCount;
+	public ProgressDialog initDialog = null;
+	
+	public ProgressDialog loadingScreen = null;
 
 	public static synchronized void initializeInstance(SQLiteOpenHelper helper, Context context) {
 		if (instance == null) {
 			instance = new DBManager();
 			dbHelper = helper;
+			instance.context = context;
 			instance.db = dbHelper.getWritableDatabase();
-			instance.deserializeTable(context);
+			//instance.deserializeTable();
 		}
 	}
 
@@ -93,20 +110,18 @@ public class DBManager {
 		return instance;
 	}
 
-	public SQLiteDatabase openDatabase() {
-		if (!useDefaultDB) {
-			if (mOpenCounter.incrementAndGet() == 1) {
-				// Opening new database
-				db = dbHelper.getWritableDatabase();
-			}
+	public synchronized SQLiteDatabase openDatabase() {
+		if (!useDefaultDB && mOpenCounter.incrementAndGet() == 1) {
+			// Opening new database
+			db = dbHelper.getWritableDatabase();
 		}
 
 		return db;
 	}
 
-	public void closeDatabase() {
+	public synchronized void closeDatabase() {
 		
-		if (mOpenCounter.decrementAndGet() == 0) {
+		if (!useDefaultDB && mOpenCounter.decrementAndGet() == 0) {
 			// Closing database
 			db.close();
 		}
@@ -117,11 +132,16 @@ public class DBManager {
 
 		this.db = db;
 		this.useDefaultDB = true;
-
-		updateAllZones();
-		updateAllCrimes();
-		updateAllCleryAct();
-
+		runningInit = true;
+		initCount = 3;
+		
+		synchronized(db)
+		{
+			updateAllZones();
+			updateAllCrimes();
+			updateAllCleryAct();
+		}
+		//db.close();
 		this.db = temp;
 		this.useDefaultDB = false;
 	}
@@ -142,58 +162,140 @@ public class DBManager {
 		return success;
 	}
 	
-	private void serializeTable()
+	/*public void updateTable(TableEntry option)
 	{
-		FileOutputStream fos;
-		try 
+		if(option == TableEntry.CRIMES_ALL)
 		{
-			fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(table);
-	        oos.close();
-		} 
-		catch (FileNotFoundException e) 
-		{
-			e.printStackTrace();
-		} 
-		catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			table.remove(crimeAllEntry);
 		}
+		else if(option == TableEntry.CRIMES_TYPE)
+		{
+			table.remove(crimeTypeEntry);
+		}
+		else if(option == TableEntry.CRIMES_ZONE)
+		{
+			table.remove(crimeZoneEntry);
+		}
+		
+		instance.serializeTable();
+	}*/
+	
+	/*public void insertTable(TableEntry option, CrimeData data)
+	{
+		Log.e(data.getOffense().toString(), "s");
+		CrimeData.sorted = false;
+		if(option == TableEntry.CRIMES_ALL)
+		{
+			List<CrimeData> updatedData = table.get(crimeAllEntry).get("ALL");
+			synchronized(table.get(crimeAllEntry))
+			{
+				updatedData.add(data);
+			}
+		}
+		else if(option == TableEntry.CRIMES_ZONE)
+		{
+			if(!table.get(crimeZoneEntry).contains("" + data.getZone().getZoneID()))
+			{
+				table.get(crimeZoneEntry).put("" + data.getZone().getZoneID(), new LinkedList<CrimeData>());
+			}
+			
+			List<CrimeData> updatedData = table.get(crimeAllEntry).get("" + data.getZone().getZoneID());
+			
+			table.get(crimeAllEntry).get("" + data.getZone()).clear();
+			table.get(crimeAllEntry).put("" + data.getZone().getZoneID(), updatedData);
+		}
+		else if(option == TableEntry.CRIMES_TYPE)
+		{
+			table.remove(crimeZoneEntry);
+		}
+		
+		instance.serializeTable();
+	}*/
+	
+	/*private void serializeTable()
+	{
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... params) {
+				FileOutputStream fos;
+				try 
+				{
+					fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+					ObjectOutputStream oos = new ObjectOutputStream(fos);
+					oos.writeObject(table);
+			        oos.close();
+				} 
+				catch (FileNotFoundException e) 
+				{
+					e.printStackTrace();
+					Log.e("serialize", "failed");
+				} 
+				catch (IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.e("serialize", "failed");
+				}
+				
+				return null;
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void deserializeTable(Context context)
+	public void deserializeTable()
 	{
-		FileInputStream fis;
-		this.context = context;
-		
-		try {
-			fis = context.openFileInput(FILENAME);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-	        table = (Hashtable<String, List<CrimeData>>)ois.readObject();
-	        ois.close();
-		} 
-		catch (FileNotFoundException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		catch (StreamCorruptedException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+	        protected void onPreExecute()
+			{
+				if(loadingScreen != null)
+				{
+					loadingScreen.setMessage("Loading data, please wait.");
+					loadingScreen.show();
+				}
+			}
+			@Override
+			protected Void doInBackground(Void... params) {
+				FileInputStream fis;
+				
+				try {
+					fis = context.openFileInput(FILENAME);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+			        table = (Hashtable<String, Hashtable<String, List<CrimeData>>>)ois.readObject();
+			        ois.close();
+				} 
+				catch (FileNotFoundException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				catch (StreamCorruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				catch (IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return null;
+			}
+			
+			public void onPostExecute(Void result) {
+				if(loadingScreen != null)
+				{
+					loadingScreen.dismiss();
+					loadingScreen = null;
+				}
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}*/
 
 	public void updateAllZones() {
 		request = new DBRequester();
@@ -201,6 +303,7 @@ public class DBManager {
 		params.add(new BasicNameValuePair("tag", "get_zones"));
 
 		instance.openDatabase().delete("zones", null, null);
+		instance.closeDatabase();
 
 		request.setOnJSONEventListener(new UpdateAllZoneListener(
 				allZoneListener));
@@ -243,6 +346,10 @@ public class DBManager {
 	
 	public void updateAllZoneInfo() {
 		request = new DBRequester();
+		
+		instance.openDatabase().delete("zone_information", null, null);
+		instance.closeDatabase();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("tag", "get_zone_info"));
 
@@ -273,6 +380,11 @@ public class DBManager {
 	
 	public void updateAllCleryAct() {
 		request = new DBRequester();
+		
+		instance.openDatabase().delete("clery_acts", null, null);
+		instance.closeDatabase();
+		
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("tag", "get_clery_act"));
 		
@@ -305,6 +417,7 @@ public class DBManager {
 		params.add(new BasicNameValuePair("tag", "get_crime_data"));
 
 		instance.openDatabase().delete("crime_data", null, null);
+		instance.closeDatabase();
 
 		request.setOnJSONEventListener(new UpdateAllCrimeDataListener(
 				allCrimeDataListener));
@@ -412,7 +525,7 @@ public class DBManager {
 						.getColumnIndex("crime_date")));
 
 				data = new CrimeData(location, c.getString(c
-						.getColumnIndex("location")), date, OffenseType.RAPE.getOffenseType(c.getString(c.getColumnIndex("offense"))),
+						.getColumnIndex("location")), date, OffenseType.getOffenseType(c.getString(c.getColumnIndex("offense"))),
 						c.getString(c.getColumnIndex("offense_desc")), getZone(c.getInt(c.getColumnIndex("zone_id"))));
 			} catch (ParseException e) {
 				Log.e("Parse Exception", e.getMessage());
@@ -426,68 +539,68 @@ public class DBManager {
 	}
 
 	public void getAllCrimeData(final OnDBGetListener<CrimeData> listener) {
-		
-		if(table.containsKey("get_all_crime") && write)
-		{
-			table.remove("get_all_crime");
-			write = false;
-		}
-		
-		if(table.containsKey("get_all_crime"))
-		{
-			new AsyncTask<Void, Void, List<CrimeData>>() {
-				@Override
-				protected List<CrimeData> doInBackground(Void... params) {
-					return (List<CrimeData>)table.get("get_all_crime");
+		new AsyncTask<Void, Void, List<CrimeData>>() {
+			@Override
+			protected List<CrimeData> doInBackground(Void... params) {
+				/*if(table.containsKey(instance.crimeAllEntry))
+				{
+					Hashtable<String, List<CrimeData>> entry = (Hashtable<String, List<CrimeData>>)table.get("get_all_crime");
+					if(!CrimeData.isSorted())
+					{
+						Collections.sort(entry.get("ALL"), CrimeData.getComparator());
+						CrimeData.sorted = true;
+					}
+					
+					return (List<CrimeData>)entry.get("ALL");
+				}*/
+				
+				List<CrimeData> crimeList = new LinkedList<CrimeData>();
+
+				SQLiteDatabase db = instance.openDatabase();
+				String selectQuery = "SELECT crime_id FROM crime_data ORDER BY crime_date DESC";
+				Cursor c = db.rawQuery(selectQuery, null);
+
+				boolean hasNext = c.moveToFirst();
+				while (hasNext) 
+				{
+					crimeList.add(getCrimeData(c.getInt(c.getColumnIndex("crime_id"))));
+					hasNext = c.moveToNext();
 				}
 
-				public void onPostExecute(List<CrimeData> result) {
-					if(listener != null)
-					{
-						listener.OnGet(result);
-					}
-				}
-			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		}
-		else
-		{
-			new AsyncTask<Void, Void, List<CrimeData>>() {
-				@Override
-				protected List<CrimeData> doInBackground(Void... params) {
-					List<CrimeData> crimeList = new LinkedList<CrimeData>();
-	
-					SQLiteDatabase db = instance.openDatabase();
-					String selectQuery = "SELECT crime_id FROM crime_data ORDER BY crime_date DESC";
-					Cursor c = db.rawQuery(selectQuery, null);
-	
-					boolean hasNext = c.moveToFirst();
-					while (hasNext) 
-					{
-						crimeList.add(getCrimeData(c.getInt(c.getColumnIndex("crime_id"))));
-						hasNext = c.moveToNext();
-					}
-	
-					c.close();
-					instance.closeDatabase();
+				c.close();
+				instance.closeDatabase();
+				
+				//Hashtable<String, List<CrimeData>> entry = new Hashtable<String, List<CrimeData>>();
+				//entry.put("ALL", crimeList);
+				
+				//table.put(instance.crimeAllEntry, entry);
+				//instance.serializeTable();
+
+				return crimeList;
+			}
+
+			public void onPostExecute(List<CrimeData> result) {
+				/*if(runningInit)
+				{
+					initCount--;
 					
-					table.put("get_all_crime", crimeList);
-					instance.serializeTable();
-	
-					return crimeList;
-				}
-	
-				public void onPostExecute(List<CrimeData> result) {
-					if(listener != null)
+					if(initCount == 0 && initDialog != null)
 					{
-						listener.OnGet(result);
+						initDialog.dismiss();
+						runningInit = false;
 					}
-					else
-					{
-						Log.e("Table:", "DONE");
-					}
+				}*/
+				
+				if(listener != null)
+				{
+					listener.OnGet(result);
 				}
-			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		}
+				else
+				{
+					Log.e("Table:", "DONE");
+				}
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 	
 	public CleryActModel getCleryAct(int caID)
@@ -551,9 +664,23 @@ public class DBManager {
 
 	public void getCrimesByZone(final int zoneID,
 			final OnDBGetListener<CrimeData> listener) {
+		
 		new AsyncTask<Void, Void, List<CrimeData>>() {
 			@Override
 			protected List<CrimeData> doInBackground(Void... arg0) {
+				
+				/*if(table.containsKey(instance.crimeZoneEntry) && table.get(instance.crimeZoneEntry).containsKey("" + zoneID))
+				{
+					Hashtable<String, List<CrimeData>> entry = (Hashtable<String, List<CrimeData>>)table.get(instance.crimeZoneEntry);
+					if(!CrimeData.isSorted())
+					{
+						Collections.sort(entry.get("" + zoneID), CrimeData.getComparator());
+						CrimeData.sorted = true;
+					}
+					
+					return (List<CrimeData>)entry.get("" + zoneID);
+				}*/
+				
 				List<CrimeData> dataList = new LinkedList<CrimeData>();
 
 				SQLiteDatabase db = instance.openDatabase();
@@ -570,12 +697,38 @@ public class DBManager {
 
 				c.close();
 				instance.closeDatabase();
+				
+				/*if(!table.containsKey(instance.crimeZoneEntry))
+				{
+					table.put(instance.crimeZoneEntry, new Hashtable<String, List<CrimeData>>());
+				}
+		
+				table.get(instance.crimeZoneEntry).put("" + zoneID, dataList);
+				instance.serializeTable();*/
 
 				return dataList;
 			}
 
 			public void onPostExecute(List<CrimeData> result) {
-				listener.OnGet(result);
+				/*if(runningInit)
+				{
+					initCount--;
+					
+					if(initCount == 0 && initDialog != null)
+					{
+						initDialog.dismiss();
+						runningInit = false;
+					}
+				}*/
+				
+				if(listener != null)
+				{
+					listener.OnGet(result);
+				}
+				else
+				{
+					Log.e("Zone Table", "Done");
+				}
 			}
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}

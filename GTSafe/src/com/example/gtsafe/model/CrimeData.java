@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -78,5 +79,21 @@ public class CrimeData implements java.io.Serializable, Listable
 	@Override
 	public String listString() {
 		return toString();
+	}
+	
+	public static Comparator<CrimeData> getComparator()
+	{
+		return new Comparator<CrimeData>(){
+			@Override
+			public int compare(CrimeData arg0, CrimeData arg1) {
+				return arg1.getDate().compareTo(arg0.getDate()); //Descending
+			}
+		};
+	}
+	
+	public static boolean sorted = true;
+	public static boolean isSorted()
+	{
+		return sorted;
 	}
 }
