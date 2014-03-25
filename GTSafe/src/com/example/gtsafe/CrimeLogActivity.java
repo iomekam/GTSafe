@@ -1,5 +1,7 @@
 package com.example.gtsafe;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,14 +9,18 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,7 +39,7 @@ public class CrimeLogActivity extends SuperActivity
 	{
 		ALL("All Crimes", null),
 		ZONE("Zone", manager.getAllZones().toArray(new ZoneData[manager.getAllZones().size()])), 
-				CRIME_TYPE("Crime Type", OffenseType.values()), DATE("Date", null);
+				CRIME_TYPE("Crime Type", OffenseType.values()), DATE("Date",null);
 		
 		String name;
 		Listable[] searchContent = {}; //all items should implement Listable
@@ -245,6 +251,49 @@ public class CrimeLogActivity extends SuperActivity
 					});
 				}
 			});
+		}else{
+			
+			// Inflate your custom layout containing 2 DatePickers
+		    LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+		    View customView = inflater.inflate(R.layout.double_date_picker, null);
+
+		    // Define your date pickers
+		    final DatePicker dpStartDate = (DatePicker) customView.findViewById(R.id.dpStartDate);
+		    final DatePicker dpEndDate = (DatePicker) customView.findViewById(R.id.dpEndDate);
+
+		    // Build the dialo
+		    b.setView(customView); // Set the view of the dialog to your custom layout
+		    b.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+		        @SuppressWarnings("deprecation")
+				@Override
+		        public void onClick(DialogInterface dialog, int which) {
+		        	dialog.dismiss();
+					adapter.clear();
+		        	int startYear, startMonth, startDay, endYear, endMonth, endDay;
+		            startYear = dpStartDate.getYear();
+		            startMonth = dpStartDate.getMonth();
+		            startDay = dpStartDate.getDayOfMonth();
+		            endYear = dpEndDate.getYear();
+		            endMonth = dpEndDate.getMonth();
+		            endDay = dpEndDate.getDayOfMonth();
+		            //java.sql.Date jsqlD = java.sql.Date.valueOf( "2010-01-31" );
+		            @SuppressWarnings("deprecation")
+					Date start= Date.valueOf(startYear+"-"+startMonth+"-"+startDay);
+		            Date end= Date.valueOf(endYear+"-"+endMonth+"-"+endDay);
+		            manager.getCrimesByDate(start, end, new OnDBGetListener<CrimeData>() {
+
+						@Override
+						public void OnGet(List<CrimeData> list) {
+							adapter.addAll(list);
+							adapter.notifyDataSetChanged();
+							
+						}
+		            	
+					});
+		    
+		        }});
+			
+
 		}
 		
 		b.show();
