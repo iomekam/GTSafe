@@ -21,7 +21,7 @@ public enum OffenseType implements Listable
 		this.part = part;
 	}
 	
-	public OffenseType getOffenseType(String name)
+	public static OffenseType getOffenseType(String name)
 	{
 		for(int i = 0; i < OffenseType.values().length; i++)
 		{

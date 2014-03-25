@@ -43,19 +43,16 @@ public class UpdateZoneInfoListener implements OnGetJSONListener {
 				int zoneInfoID= jObj.getInt("zone_info_id");
 				String description = jObj.getString("zone_description");
 				
-				info = new ZoneInfo(zoneID, null);
+				DBManager.getInstance().getZone(zoneID).getZoneInformation().getDescription().add(description);
 
 				val.put("zone_info_id", zoneInfoID);
 				val.put("zone_id", zoneID);
 				val.put("zone_description", description);
 				DBManager.getInstance().insert("zone_information", null, val);
-				
-
 			} 
 			catch (JSONException e) {}
 
 			return info;
-
 		}
 	}
 	public void onPostExecute(ZoneInfo result)

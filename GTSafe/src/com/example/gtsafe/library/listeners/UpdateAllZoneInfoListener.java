@@ -51,24 +51,33 @@ public class UpdateAllZoneInfoListener implements OnGetJSONListener {
 					int zoneInfoID = jObj.getInt("zone_info_id");
 					String description = jObj.getString("zone_description");
 					
-					list.add(new ZoneInfo(zoneID, null));
+					DBManager.getInstance().getZone(zoneID).getZoneInformation().getDescription().add(description);
+					
+					list.add(DBManager.getInstance().getZone(zoneID).getZoneInformation());
 
 					val.put("zone_info_id", zoneInfoID);
 					val.put("zone_id", zoneID);
 					val.put("zone_description", description);
-					DBManager.getInstance().insert("zone_information", null,
-							val);
+					DBManager.getInstance().insert("zone_information", null, val);
 					val.clear();
 				}
 			}
-			catch (JSONException e) {
-			
-			}
+			catch (JSONException e) {}
 
 			return list;
 		}
 
 		public void onPostExecute(List<ZoneInfo> result) {
+			if(DBManager.getInstance().runningInit)
+			{
+				DBManager.getInstance().initCount--;
+				
+				if(DBManager.getInstance().initCount == 0 && DBManager.getInstance().initDialog != null)
+				{
+					DBManager.getInstance().initDialog.dismiss();
+					DBManager.getInstance().runningInit = false;
+				}
+			}
 			if (listener != null) {
 				for(OnDBUpdateListener<List<ZoneInfo>> lis: listener)
 				{

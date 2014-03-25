@@ -19,14 +19,13 @@ import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 
-public class CrimeStatActivity extends Activity {
+public class CrimeStatActivity extends SuperActivity {
 	private XYPlot plot;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_stat);
-		DBManager.initializeInstance(new DBHelper(getApplicationContext()), this);
 		final DBManager db = DBManager.getInstance();
 		
 		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){

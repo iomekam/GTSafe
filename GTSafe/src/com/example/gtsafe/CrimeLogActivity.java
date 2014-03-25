@@ -1,14 +1,12 @@
 package com.example.gtsafe;
 
-import java.sql.Date;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.Listable;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
@@ -28,14 +25,14 @@ import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 
-public class CrimeLogActivity extends Activity
+public class CrimeLogActivity extends SuperActivity
 {
 	private static List<CrimeData> crimeData = new LinkedList<CrimeData>();
 
 	private enum Search
 	{
 		ALL("All Crimes", null),
-		ZONE("Zone", DBManager.getInstance().getAllZones().toArray(new ZoneData[DBManager.getInstance().getAllZones().size()])), 
+		ZONE("Zone", manager.getAllZones().toArray(new ZoneData[manager.getAllZones().size()])), 
 				CRIME_TYPE("Crime Type", OffenseType.values()), DATE("Date", null);
 		
 		String name;
@@ -67,7 +64,6 @@ public class CrimeLogActivity extends Activity
 
 	}
 	
-	final DBManager db = DBManager.getInstance();
 	ListView crimes;
 	CustomSpinner searchCrimes;
 	CharSequence result;
@@ -92,7 +88,7 @@ public class CrimeLogActivity extends Activity
 				this, android.R.layout.simple_spinner_item, Search.values());
 		
 		// were gonna start of the list view with all of the crime data
-		db.getAllCrimeData(new OnDBGetListener<CrimeData>() 
+		manager.getAllCrimeData(new OnDBGetListener<CrimeData>() 
 		{
 			@Override
 			public void OnGet(List<CrimeData> list) 
@@ -174,7 +170,7 @@ public class CrimeLogActivity extends Activity
 			}
 		});
 		
-		DBManager.getInstance().setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
+		manager.setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
 		{
 			@Override
 			public void OnUpdate(CrimeData item) {
@@ -186,12 +182,7 @@ public class CrimeLogActivity extends Activity
 				{
 				
 					adapter.insert(item, 0);
-					adapter.sort(new Comparator<CrimeData>(){
-						@Override
-						public int compare(CrimeData arg0, CrimeData arg1) {
-							return arg1.getDate().compareTo(arg0.getDate()); //Descending
-						}
-					});
+					adapter.sort(CrimeData.getComparator());
 					
 					runOnUiThread(new Runnable() {
 				        @Override
@@ -202,7 +193,9 @@ public class CrimeLogActivity extends Activity
 				}
 				
 				crimes.setSelection(position);
+				
 				crimeData.add(item);
+				Collections.sort(crimeData, CrimeData.getComparator());
 			}
 		});
 	}
@@ -221,7 +214,7 @@ public class CrimeLogActivity extends Activity
 					
 					selectedItem = Integer.parseInt(options[which]);
 					
-					db.getCrimesByZone(Integer.parseInt(options[which]), new OnDBGetListener<CrimeData>() {
+					manager.getCrimesByZone(Integer.parseInt(options[which]), new OnDBGetListener<CrimeData>() {
 						@Override
 						public void OnGet(List<CrimeData> list) 
 						{
@@ -240,9 +233,9 @@ public class CrimeLogActivity extends Activity
 				public void onClick(DialogInterface dialog, int position) {
 					dialog.dismiss();
 					adapter.clear();
-					final OffenseType offType = OffenseType.AGG_ASSAULT.getOffenseType(options[position]);
+					final OffenseType offType = OffenseType.getOffenseType(options[position]);
 					selectedItem = offType;
-					db.getCrimesByType(offType, new OnDBGetListener<CrimeData>() {
+					manager.getCrimesByType(offType, new OnDBGetListener<CrimeData>() {
 						@Override
 						public void OnGet(List<CrimeData> list) {
 							adapter.addAll(list);
@@ -252,7 +245,7 @@ public class CrimeLogActivity extends Activity
 				}
 			});
 		}
-
+		
 		b.show();
 	}
 }

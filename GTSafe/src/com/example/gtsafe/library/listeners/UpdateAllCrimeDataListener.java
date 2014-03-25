@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.gtsafe.library.DBManager;
+import com.example.gtsafe.library.DBManager.TableEntry;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
 import com.example.gtsafe.model.CrimeData;
@@ -72,8 +73,8 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 					Date d = null;
 					try {
 						d = format.parse(date);
-						list.add(new CrimeData(new LatLng(lat,lon), location, d, OffenseType.ALL_OTHER_OFFENSES.getOffenseType(offense), 
-									offenseDesc, new ZoneData(null, zoneID, null)));
+						list.add(new CrimeData(new LatLng(lat,lon), location, d, OffenseType.getOffenseType(offense), 
+									offenseDesc, DBManager.getInstance().getZone(zoneID)));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -97,9 +98,30 @@ public class UpdateAllCrimeDataListener implements OnGetJSONListener
 		}
 		
 		public void onPostExecute(List<CrimeData> result)
-		{
-			DBManager.getInstance().write = true;
+		{	
+			/*DBManager.getInstance().updateTable(TableEntry.CRIMES_ALL);
+			DBManager.getInstance().updateTable(TableEntry.CRIMES_ZONE);
+			
+			DBManager.getInstance().initCount++;
 			DBManager.getInstance().getAllCrimeData(null);
+			
+			for(ZoneData zone: DBManager.getInstance().getAllZones())
+			{
+				DBManager.getInstance().initCount++;
+				DBManager.getInstance().getCrimesByZone(zone.getZoneID(), null);
+			}*/
+			
+			if(DBManager.getInstance().runningInit)
+			{
+				DBManager.getInstance().initCount--;
+				
+				if(DBManager.getInstance().initCount == 0 && DBManager.getInstance().initDialog != null)
+				{
+					DBManager.getInstance().initDialog.dismiss();
+					DBManager.getInstance().runningInit = false;
+				}
+			}
+			
 			if(listener != null)
 			{
 				for(OnDBUpdateListener<List<CrimeData>> lis: listener)

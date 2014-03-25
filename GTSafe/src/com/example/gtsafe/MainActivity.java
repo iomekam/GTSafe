@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 import com.example.gtsafe.model.ZoneInfo;
 
-public class MainActivity extends Activity {
+public class MainActivity extends SuperActivity {
 	private String s = "";
 	private TextView view;
 	private Button view_Button;
@@ -37,18 +38,21 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		DBManager.initializeInstance(new DBHelper(getApplicationContext()), this);
-		Context context = getApplicationContext();
+		//DBManager.initializeInstance(new DBHelper(getApplicationContext()), this);
+		if(manager.runningInit)
+		{
+			manager.initDialog = ProgressDialog.show(this, "Initialzing", "Loading data into app. Please wait", true);
+		}
+		else
+		{
+			//manager.loadingScreen = new ProgressDialog(this);
+			//manager.deserializeTable();
+		}
+		
 		view =  (TextView)findViewById(R.id.textView1);
 		view.setMovementMethod(new ScrollingMovementMethod());
 		
-		
-		Gcm gcm = new Gcm(context, this);
-		gcm.initGCM();
-		
-		final DBManager db = DBManager.getInstance();
-		
-		db.setOnAllCleryActUpdateEventListener(new OnDBUpdateListener<List<CleryActModel>>()
+		manager.setOnAllCleryActUpdateEventListener(new OnDBUpdateListener<List<CleryActModel>>()
 		{
 			@Override
 			public void OnUpdate(List<CleryActModel> updatedItem) {
@@ -58,7 +62,7 @@ public class MainActivity extends Activity {
 			
 		});
 		
-		db.setOnAllZoneInfoUpdateEventListener(new OnDBUpdateListener<List<ZoneInfo>>()
+		manager.setOnAllZoneInfoUpdateEventListener(new OnDBUpdateListener<List<ZoneInfo>>()
 		{
 
 			@Override
@@ -69,7 +73,7 @@ public class MainActivity extends Activity {
 
 		});
 		
-		db.setOnAllZoneUpdateEventListener(new OnDBUpdateListener<List<ZoneData>>()
+		manager.setOnAllZoneUpdateEventListener(new OnDBUpdateListener<List<ZoneData>>()
 		{
 			@Override
 			public void OnUpdate(List<ZoneData> data) {
@@ -78,17 +82,17 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		db.setOnZoneUpdateEventListener(new OnDBUpdateListener<ZoneData>()
+		manager.setOnZoneUpdateEventListener(new OnDBUpdateListener<ZoneData>()
 		{
 			@Override
 			public void OnUpdate(ZoneData data) 
 			{
-					s = s + data.getZoneID() + "\n";
+					s = "Creating zone " + data.getZoneID() + "\n";
 					view.setText(s);
 			}	
 		});
 		
-		db.setOnAllCrimeUpdateEventListener(new OnDBUpdateListener<List<CrimeData>>()
+		manager.setOnAllCrimeUpdateEventListener(new OnDBUpdateListener<List<CrimeData>>()
 		{
 			@Override
 			public void OnUpdate(List<CrimeData> data) 
@@ -98,7 +102,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		db.setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
+		manager.setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
 		{
 			@Override 
 			public void OnUpdate(CrimeData data) {
@@ -108,38 +112,41 @@ public class MainActivity extends Activity {
 		
 		//view.setText(db.getCrimeData(1).getLocationName());
 		
-		db.getAllCrimeData(new OnDBGetListener<CrimeData>(){
-
-			@Override
-			public void OnGet(List<CrimeData> list) {
-				view.setText("Crimes: " + list.size());
-			}
-		});
-		
-		Calendar cal = Calendar.getInstance();//gives current date at given time
-		cal.set(Calendar.YEAR, 2013 );
-	    cal.set(Calendar.MONTH, Calendar.JULY );
-	    cal.set(Calendar.DATE, 28 );
-	    
-	    Calendar calB = Calendar.getInstance();
-		calB.set(Calendar.YEAR, 2014 );
-	    calB.set(Calendar.MONTH, Calendar.JANUARY );
-	    calB.set(Calendar.DATE, 5 );
-
-		db.getCrimesByDate(new java.sql.Date(cal.getTimeInMillis()), new java.sql.Date(calB.getTimeInMillis()),  new OnDBGetListener<CrimeData>(){
-
-			@Override
-			public void OnGet(List<CrimeData> list) {
-				view.setText("Crimes by Date: " + list.size());
-			}
-		});
-		db.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
-
-			@Override
-			public void OnGet(List<CrimeData> list) {
-				view.setText("Crimes by Type: " + list.size());
-			}
-		});
+		if(!manager.runningInit)
+		{
+			manager.getAllCrimeData(new OnDBGetListener<CrimeData>(){
+	
+				@Override
+				public void OnGet(List<CrimeData> list) {
+					view.setText("Crimes: " + list.size());
+				}
+			});
+			
+			Calendar cal = Calendar.getInstance();//gives current date at given time
+			cal.set(Calendar.YEAR, 2013 );
+		    cal.set(Calendar.MONTH, Calendar.JULY );
+		    cal.set(Calendar.DATE, 28 );
+		    
+		    Calendar calB = Calendar.getInstance();
+			calB.set(Calendar.YEAR, 2014 );
+		    calB.set(Calendar.MONTH, Calendar.JANUARY );
+		    calB.set(Calendar.DATE, 5 );
+	
+			manager.getCrimesByDate(new java.sql.Date(cal.getTimeInMillis()), new java.sql.Date(calB.getTimeInMillis()),  new OnDBGetListener<CrimeData>(){
+	
+				@Override
+				public void OnGet(List<CrimeData> list) {
+					view.setText("Crimes by Date: " + list.size());
+				}
+			});
+			manager.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
+	
+				@Override
+				public void OnGet(List<CrimeData> list) {
+					view.setText("Crimes by Type: " + list.size());
+				}
+			});
+		}
 		
 //		
 //		db.getCrimesByZone(1, new OnDBGetListener<CrimeData>(){
@@ -182,12 +189,5 @@ public class MainActivity extends Activity {
 			        startActivity(myIntent);
 			 }
 			 });
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 }

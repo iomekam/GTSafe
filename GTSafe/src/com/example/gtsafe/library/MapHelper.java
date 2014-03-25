@@ -65,8 +65,8 @@ public class MapHelper {
 	}
 	
 	public GoogleMap populateCrimes(){
-		int days = 14;
 	    Calendar currCal = Calendar.getInstance();
+	    int days = currCal.getActualMaximum(Calendar.DAY_OF_MONTH);
 	    currCal.add(Calendar.DATE, -1 * days);
 	    Log.e("DATE", new java.sql.Date(currCal.getTimeInMillis()).toString());
 	    db.getCrimesByDate(new java.sql.Date(currCal.getTimeInMillis()), new OnDBGetListener<CrimeData>(){

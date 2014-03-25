@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 
-import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.model.CleryActModel;
 
-public class SingleListItem extends Activity {
+public class SingleListItem extends SuperActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +18,7 @@ public class SingleListItem extends Activity {
         // getting attached intent data
         int id = i.getIntExtra("clery_id", 1);
         
-        CleryActModel model = DBManager.getInstance().getCleryAct(id);
+        CleryActModel model = manager.getCleryAct(id);
         
 		WebView view = (WebView)findViewById(R.id.webView1);
 		view.loadData(model.getText(), "text/html", null);

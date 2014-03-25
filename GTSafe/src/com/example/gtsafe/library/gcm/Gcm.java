@@ -40,14 +40,12 @@ public class Gcm
     AtomicInteger msgId = new AtomicInteger();
     SharedPreferences prefs;
     Context context;
-    Activity activity;
 
     String regid;
     
-    public Gcm(Context context, Activity activity)
+    public Gcm(Context context)
     {
     	this.context = context;
-    	this.activity = activity;
     	gcm = GoogleCloudMessaging.getInstance(context);
     }
    
@@ -57,9 +55,9 @@ public class Gcm
 			gcm = GoogleCloudMessaging.getInstance(context);
             regid = getRegistrationId();
 
-            if (regid.isEmpty()) {
+            //if (regid.isEmpty()) {
                 registerInBackground();
-            }
+            //}
 		}
     }
     
@@ -67,11 +65,11 @@ public class Gcm
 	    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 	    if (resultCode != ConnectionResult.SUCCESS) {
 	        if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-	            GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
+	            GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity)context,
 	                    PLAY_SERVICES_RESOLUTION_REQUEST).show();
 	        } else {
 	            Log.i("", "This device is not supported.");
-	            activity.finish();
+	            ((Activity)context).finish();
 	        }
 	        return false;
 	    }
@@ -100,7 +98,7 @@ public class Gcm
 	private SharedPreferences getGCMPreferences(Context context) {
 	    // This sample app persists the registration ID in shared preferences, but
 	    // how you store the regID in your app is up to you.
-	    return activity.getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+	    return context.getSharedPreferences("GTSafe", Context.MODE_PRIVATE);
 	}
 	
 	private static int getAppVersion(Context context) {
@@ -147,7 +145,7 @@ public class Gcm
 	
 	private void sendRegistrationIdToBackend(String id) 
 	{
-		TelephonyManager telephonyManager = (TelephonyManager)activity.getSystemService(Context.TELEPHONY_SERVICE);                                          
+		TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);                                          
 		DBRequester db = new DBRequester();
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("tag", "insert_user"));

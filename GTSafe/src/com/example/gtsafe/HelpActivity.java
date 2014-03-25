@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
  
-public class HelpActivity extends Activity {
+public class HelpActivity extends SuperActivity {
  
 	private ViewFlipper viewFlipper;
 	
