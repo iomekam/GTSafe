@@ -7,10 +7,12 @@ import java.util.StringTokenizer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,6 +101,23 @@ if (mMap == null) {
         }
 
     });  
+    View veep = getLayoutInflater().inflate(R.layout.activity_map, null);
+	ImageButton help = (ImageButton)veep.findViewById(R.id.helpbutton2);
+	help.setOnClickListener(new View.OnClickListener() {
+		 @Override
+		 public void onClick(View v) {
+		        Intent myIntent=new Intent(CrimeMapActivity.this,HelpActivity.class);
+		        startActivity(myIntent);
+		 }
+		 });
+	ImageButton data = (ImageButton)veep.findViewById(R.id.datapage);
+	data.setOnClickListener(new View.OnClickListener() {
+		 @Override
+		 public void onClick(View v) {
+		        Intent myIntent=new Intent(CrimeMapActivity.this,DataActivity.class);
+		        startActivity(myIntent);
+		 }
+		 });
     
     zones = helper.getZones();
     Calendar currCal = Calendar.getInstance();
@@ -162,13 +181,7 @@ if (mMap == null) {
     else{
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords.getCenter(), 16));
 }
-	filterButt = (Button)findViewById(R.id.ok);
-	filterButt.setOnClickListener(new View.OnClickListener() {
-	 @Override
-	 public void onClick(View v) {
 
-	 }
-	 });
 }
 @Override
 protected void onResume() {
