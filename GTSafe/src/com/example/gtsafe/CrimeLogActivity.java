@@ -1,5 +1,7 @@
 package com.example.gtsafe;
 
+import java.sql.Date;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.Listable;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
+import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
@@ -70,6 +73,8 @@ public class CrimeLogActivity extends Activity
 	CharSequence result;
 	List<String> searchBy;
 	ArrayAdapter<CrimeData> adapter;
+	Search currentSelection = Search.ALL;
+	Object selectedItem = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,7 @@ public class CrimeLogActivity extends Activity
 				crimes.setTextFilterEnabled(true);
 				crimes.setOnItemClickListener(new OnItemClickListener()
 				{
+					@SuppressWarnings("deprecation")
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View view,
 							int position, long id) 
@@ -144,6 +150,8 @@ public class CrimeLogActivity extends Activity
 							int position, long id) 
 					{
 						Search type = (Search)searchCrimes.getItemAtPosition(position);
+						currentSelection = type;
+						
 						if(type == Search.ALL)
 						{
 							adapter.clear();
@@ -165,6 +173,38 @@ public class CrimeLogActivity extends Activity
 				// crimes.setFilterText((String) result);
 			}
 		});
+		
+		DBManager.getInstance().setOnCrimeUpdateEventListener(new OnDBUpdateListener<CrimeData>()
+		{
+			@Override
+			public void OnUpdate(CrimeData item) {
+				int position = crimes.getSelectedItemPosition();
+				
+				if((currentSelection == Search.ZONE && item.getZone().getZoneID() == (Integer)selectedItem) ||
+						(currentSelection == Search.CRIME_TYPE && item.getOffense() == (OffenseType)selectedItem) ||
+						(currentSelection == Search.ALL))
+				{
+				
+					adapter.insert(item, 0);
+					adapter.sort(new Comparator<CrimeData>(){
+						@Override
+						public int compare(CrimeData arg0, CrimeData arg1) {
+							return arg1.getDate().compareTo(arg0.getDate()); //Descending
+						}
+					});
+					
+					runOnUiThread(new Runnable() {
+				        @Override
+				        public void run() {
+				                adapter.notifyDataSetChanged();
+				        }
+				    });
+				}
+				
+				crimes.setSelection(position);
+				crimeData.add(item);
+			}
+		});
 	}
 
 	public void showPopUp(String title, final String[] options, Search type) {
@@ -178,6 +218,8 @@ public class CrimeLogActivity extends Activity
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 					adapter.clear();
+					
+					selectedItem = Integer.parseInt(options[which]);
 					
 					db.getCrimesByZone(Integer.parseInt(options[which]), new OnDBGetListener<CrimeData>() {
 						@Override
@@ -199,6 +241,7 @@ public class CrimeLogActivity extends Activity
 					dialog.dismiss();
 					adapter.clear();
 					final OffenseType offType = OffenseType.AGG_ASSAULT.getOffenseType(options[position]);
+					selectedItem = offType;
 					db.getCrimesByType(offType, new OnDBGetListener<CrimeData>() {
 						@Override
 						public void OnGet(List<CrimeData> list) {
