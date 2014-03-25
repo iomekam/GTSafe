@@ -253,15 +253,15 @@ public class CrimeLogActivity extends SuperActivity
 			});
 		}else{
 			
-			// Inflate your custom layout containing 2 DatePickers
+			
 		    LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
 		    View customView = inflater.inflate(R.layout.double_date_picker, null);
 
-		    // Define your date pickers
+		    
 		    final DatePicker dpStartDate = (DatePicker) customView.findViewById(R.id.dpStartDate);
 		    final DatePicker dpEndDate = (DatePicker) customView.findViewById(R.id.dpEndDate);
 
-		    // Build the dialo
+		  
 		    b.setView(customView); // Set the view of the dialog to your custom layout
 		    b.setPositiveButton("OK", new DialogInterface.OnClickListener(){
 		        @SuppressWarnings("deprecation")
