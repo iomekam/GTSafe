@@ -42,7 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/questionmark"
-        android:background="@drawable/roundbutton" />
+        android:src="@drawable/questionmarkremake"
+        android:background="@null"
+        />
 
 </RelativeLayout>
