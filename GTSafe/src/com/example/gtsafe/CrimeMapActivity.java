@@ -102,7 +102,7 @@ if (mMap == null) {
     
     zones = helper.getZones();
     Calendar currCal = Calendar.getInstance();
-    int days = currCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    int days = (int) (currCal.getActualMaximum(Calendar.DAY_OF_MONTH) / 1.5);
     currCal.add(Calendar.DATE, -1 * days);
     date = (TextView)findViewById(R.id.currDate);
     date.setText("Date Range: " + (new java.sql.Date(currCal.getTimeInMillis()).toString()) + " - Today");

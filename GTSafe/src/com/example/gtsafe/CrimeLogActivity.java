@@ -88,6 +88,40 @@ public class CrimeLogActivity extends SuperActivity
 				this, android.R.layout.simple_spinner_item, Search.values());
 		
 		// were gonna start of the list view with all of the crime data
+		
+		spinnerArrayAdapter
+		.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The
+																					// drop
+																					// down		
+		// view
+		searchCrimes.setAdapter(spinnerArrayAdapter);
+		searchCrimes.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long id) 
+			{
+				Search type = (Search)searchCrimes.getItemAtPosition(position);
+				currentSelection = type;
+				
+				if(type == Search.ALL)
+				{
+					adapter.clear();
+					adapter.addAll(crimeData);
+					adapter.notifyDataSetChanged();
+				}
+				else
+				{
+					showPopUp(type.toString(), type.getContent(), type);
+					searchCrimes.setSelection(-1);
+				}
+			}
+		
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {}
+			
+		});
+		
 		manager.getAllCrimeData(new OnDBGetListener<CrimeData>() 
 		{
 			@Override
@@ -131,39 +165,6 @@ public class CrimeLogActivity extends SuperActivity
 			            });
 						alertDialog.show();
 					}	
-				});
-				
-				spinnerArrayAdapter
-						.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The
-																									// drop
-																									// down		
-				// view
-				searchCrimes.setAdapter(spinnerArrayAdapter);
-				searchCrimes.setOnItemSelectedListener(new OnItemSelectedListener()
-				{
-					@Override
-					public void onItemSelected(AdapterView<?> arg0, View arg1,
-							int position, long id) 
-					{
-						Search type = (Search)searchCrimes.getItemAtPosition(position);
-						currentSelection = type;
-						
-						if(type == Search.ALL)
-						{
-							adapter.clear();
-							adapter.addAll(crimeData);
-							adapter.notifyDataSetChanged();
-						}
-						else
-						{
-							showPopUp(type.toString(), type.getContent(), type);
-							searchCrimes.setSelection(-1);
-						}
-					}
-
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {}
-					
 				});
 				
 				// crimes.setFilterText((String) result);
