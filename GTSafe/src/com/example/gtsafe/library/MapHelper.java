@@ -47,12 +47,15 @@ public class MapHelper {
 					}
 					else if(zones.get(x).getRank() == ZoneRank.MEDIUM)
 					{
-						color = Color.DKGRAY;
+						color = Color.DKGRAY; 
 					}
 					else if(zones.get(x).getRank() == ZoneRank.HIGH)
 					{
 						color = Color.RED;
 					}
+					
+					
+					color = Color.argb(150, Color.red(color), Color.green(color), Color.blue(color));
 					
 					if(zones.get(x).getZoneID() < 33)
 					{
