@@ -11,6 +11,7 @@ import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
+import com.example.gtsafe.model.ZoneRank;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -34,10 +35,32 @@ public class MapHelper {
 		if (zones != null){
 			if (zones.size() > 0){
 				for(int x = 0; x < zones.size(); x++){
-				    this.map.addPolygon(new PolygonOptions()
-		            .addAll(zones.get(x).getLocation())
-		            .strokeColor(Color.BLACK)
-		            .fillColor(Color.argb(50, 200, 0, 0)));
+					int color = 0;
+					
+					if(zones.get(x).getRank() == ZoneRank.LOW)
+					{
+						color = Color.WHITE;
+					}
+					else if(zones.get(x).getRank() == ZoneRank.NORMAL)
+					{
+						color = Color.LTGRAY;
+					}
+					else if(zones.get(x).getRank() == ZoneRank.MEDIUM)
+					{
+						color = Color.DKGRAY;
+					}
+					else if(zones.get(x).getRank() == ZoneRank.HIGH)
+					{
+						color = Color.RED;
+					}
+					
+					if(zones.get(x).getZoneID() < 33)
+					{
+					    this.map.addPolygon(new PolygonOptions()
+			            .addAll(zones.get(x).getLocation())
+			            .strokeColor(Color.BLACK)
+			            .fillColor(color));
+					}
 				    
 //			    	double xcentroid = 0; 
 //			    	double ycentroid = 0;

@@ -14,6 +14,7 @@ import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.listeners.interfaces.OnDBUpdateListener;
 import com.example.gtsafe.library.listeners.interfaces.OnGetJSONListener;
 import com.example.gtsafe.model.ZoneData;
+import com.example.gtsafe.model.ZoneRank;
 import com.google.android.gms.maps.model.LatLng;
 
 public class UpdateZoneListener implements OnGetJSONListener
@@ -44,6 +45,7 @@ public class UpdateZoneListener implements OnGetJSONListener
 				
 				int zoneID = jObj.getInt("zone_id");
 				String points = jObj.getString("points");
+				String rank =jObj.getString("rank");
 				
 				JSONArray jArray = new JSONObject(points).getJSONArray("points");
 				
@@ -55,9 +57,10 @@ public class UpdateZoneListener implements OnGetJSONListener
 					list.add(new LatLng(lat, lon));
 				}
 				
-				zone = new ZoneData(list, zoneID, null);
+				zone = new ZoneData(list, zoneID, null, ZoneRank.getZoneRank(rank));
 				
 				val.put("zone_id", zoneID);
+				val.put("rank", rank);
 				val.put("points", points);
 				DBManager.getInstance().insert("zones", null, val);
 			}

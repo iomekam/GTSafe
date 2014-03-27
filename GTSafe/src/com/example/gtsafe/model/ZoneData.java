@@ -17,13 +17,15 @@ public class ZoneData implements java.io.Serializable, Listable
 	private static final long serialVersionUID = -2909370489314249159L;
 	private transient List<LatLng> location;
 	private int zoneID;
-	ZoneInfo zInfo;
+	private ZoneInfo zInfo;
+	private ZoneRank rank;
 	
-	public ZoneData(List<LatLng> location, int zoneID, ZoneInfo zInfo)
+	public ZoneData(List<LatLng> location, int zoneID, ZoneInfo zInfo, ZoneRank rank)
 	{
 		this.location = location;
 		this.zoneID = zoneID;
 		this.zInfo= zInfo;
+		this.rank = rank;
 	}
 	
 	public List<LatLng> getLocation()
@@ -38,6 +40,11 @@ public class ZoneData implements java.io.Serializable, Listable
 	public ZoneInfo getZoneInformation()
 	{
 		return this.zInfo;
+	}
+	
+	public ZoneRank getRank()
+	{
+		return rank;
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {

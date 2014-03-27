@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper
 {
-	private final static int DB_VERSION = 7;
+	private final static int DB_VERSION = 11;
 	private final static String DB_NAME = "gtsafe.db";
 	
 	public DBHelper(Context context)
@@ -21,6 +21,7 @@ public class DBHelper extends SQLiteOpenHelper
 				"CREATE TABLE zones" +
 				"(" +
 					"zone_id INTEGER PRIMARY KEY NOT NULL,\n" +
+					"rank varchar(255) NOT NULL," +
 					"points varchar(10000) NOT NULL" +
 				");";
 		String CREATE_ZONE_INFO_TABLE = 

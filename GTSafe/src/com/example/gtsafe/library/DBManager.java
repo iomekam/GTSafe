@@ -52,6 +52,7 @@ import com.example.gtsafe.model.CrimeData;
 import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 import com.example.gtsafe.model.ZoneInfo;
+import com.example.gtsafe.model.ZoneRank;
 import com.google.android.gms.maps.model.LatLng;
 
 public class DBManager {
@@ -449,7 +450,7 @@ public class DBManager {
 
 		zInfo = new ZoneInfo(zoneID, description);
 
-		selectQuery = "SELECT zone_id, points FROM zones WHERE zone_id = "
+		selectQuery = "SELECT zone_id, points, rank FROM zones WHERE zone_id = "
 				+ zoneID;
 		c = db.rawQuery(selectQuery, null);
 
@@ -470,7 +471,8 @@ public class DBManager {
 				}
 
 				data = new ZoneData(list, c.getInt(c
-						.getColumnIndex("zone_id")), zInfo);
+						.getColumnIndex("zone_id")), zInfo,
+						ZoneRank.getZoneRank(c.getString(c.getColumnIndex("rank"))));
 			} catch (JSONException e) {
 				Log.e("GetZones JSON Error", e.getMessage());
 			}
