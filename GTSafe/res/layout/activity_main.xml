@@ -46,4 +46,13 @@
         android:background="@null"
         />
 
+    <Button
+        android:id="@+id/callbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/helpbutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="59dp"
+        android:text="Call" />
+
 </RelativeLayout>
