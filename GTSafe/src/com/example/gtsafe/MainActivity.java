@@ -38,6 +38,7 @@ public class MainActivity extends SuperActivity {
 	private Button data_Button;
 	private ImageButton help_Button; // Omar created this.
 	private Button call_Button;
+	String bla;
 
     
 	@Override
@@ -143,8 +144,16 @@ public class MainActivity extends SuperActivity {
 				@Override
 				public void OnGet(List<CrimeData> list) {
 					view.setText("Crimes by Date: " + list.size());
+					//bla = "" + list.size();
 				}
 			});
+			/*Context context = getApplicationContext();
+			
+			CharSequence text = "" + bla;
+			int duration = Toast.LENGTH_LONG;
+
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();*/
 			manager.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
 	
 				@Override
