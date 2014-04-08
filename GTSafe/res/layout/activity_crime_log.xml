@@ -1,26 +1,32 @@
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent" 
-    android:layout_width="fill_parent"  
-    android:orientation="vertical"  
-    android:id="@+id/layout1">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dateShowing"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right" />
 
     <LinearLayout
         android:layout_width="112dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
-        
+
         <com.example.gtsafe.CustomSpinner
             android:id="@+id/filterDate"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:prompt="@string/Filter_by_Date_or_Crime_Type" 
-            android:spinnerMode="dropdown"
-            />
-
+            android:prompt="@string/Filter_by_Date_or_Crime_Type"
+            android:spinnerMode="dropdown" />
     </LinearLayout>
-    <ListView 
-        android:id="@+id/crimeLog" 
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content">
-    </ListView>         
+
+    <ListView
+        android:id="@+id/crimeLog"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
 </LinearLayout>
