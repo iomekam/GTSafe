@@ -109,7 +109,6 @@ public class CrimeLogActivity extends SuperActivity
 			{
 				Search type = (Search)searchCrimes.getItemAtPosition(position);
 				currentSelection = type;
-				
 				if(type == Search.ALL)
 				{
 					adapter.clear();
@@ -122,7 +121,6 @@ public class CrimeLogActivity extends SuperActivity
 					searchCrimes.setSelection(-1);
 				}
 			}
-		
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {}
 			
@@ -167,7 +165,6 @@ public class CrimeLogActivity extends SuperActivity
 								// TODO Auto-generated method stub
 								arg0.dismiss();
 							}
-			            	
 			            });
 						alertDialog.show();
 					}	
@@ -235,7 +232,6 @@ public class CrimeLogActivity extends SuperActivity
 		else if(type == Search.CRIME_TYPE)
 		{
 			b.setItems(options, new OnClickListener() {
-
 				@Override
 				public void onClick(DialogInterface dialog, int position) {
 					dialog.dismiss();
@@ -252,15 +248,11 @@ public class CrimeLogActivity extends SuperActivity
 				}
 			});
 		}else{
-			
-			
 		    LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
 		    View customView = inflater.inflate(R.layout.double_date_picker, null);
-
 		    
 		    final DatePicker dpStartDate = (DatePicker) customView.findViewById(R.id.dpStartDate);
 		    final DatePicker dpEndDate = (DatePicker) customView.findViewById(R.id.dpEndDate);
-
 		  
 		    b.setView(customView); // Set the view of the dialog to your custom layout
 		    b.setPositiveButton("OK", new DialogInterface.OnClickListener(){

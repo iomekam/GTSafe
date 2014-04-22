@@ -1,5 +1,6 @@
 package com.example.gtsafe;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -7,12 +8,17 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +39,19 @@ public class MainActivity extends SuperActivity {
 	private Button view_Button;
 	private Button data_Button;
 	private ImageButton help_Button; // Omar created this.
-    
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
+
+	private List<RowItem> rowItems;
+	private CustomAdapter adapter2;
+	private String[] menutitles;
+	private TypedArray menuIcons;
+	private String [] mTitles;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -189,5 +207,94 @@ public class MainActivity extends SuperActivity {
 			        startActivity(myIntent);
 			 }
 			 });
+		
+	    mTitle = mDrawerTitle = getTitle();
+
+	    menutitles = getResources().getStringArray(R.array.titles);
+	    menuIcons = getResources().obtainTypedArray(R.array.icons);
+
+	    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+	    mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+	    rowItems = new ArrayList<RowItem>();
+
+	    for (int i = 0; i < menutitles.length; i++) {
+	     RowItem items = new RowItem(menutitles[i], menuIcons.getResourceId(
+	       i, -1));
+	     rowItems.add(items);
+	    }
+
+	    menuIcons.recycle();
+
+	    adapter2 = new CustomAdapter(getApplicationContext(), rowItems);
+
+	    mDrawerList.setAdapter(adapter2);
+	    mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+	    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+	    	    R.drawable.ic_launcher, R.string.app_name,R.string.app_name) {
+	    	       public void onDrawerClosed(View view) {
+	    	         getActionBar().setTitle(mTitle);
+	    	         // calling onPrepareOptionsMenu() to show action bar icons
+	    	         invalidateOptionsMenu();
+	    	       }
+
+	    	        public void onDrawerOpened(View drawerView) {
+	    	              getActionBar().setTitle(mDrawerTitle);
+	    	               // calling onPrepareOptionsMenu() to hide action bar icons
+	    	              invalidateOptionsMenu();
+	    	         }
+	    	        @Override
+	    	        public void onDrawerSlide(View drawerView, float slideOffset)
+	    	        {
+	    	            super.onDrawerSlide(drawerView, slideOffset);
+	    	            mDrawerLayout.bringChildToFront(drawerView);
+	    	            mDrawerLayout.requestLayout();
+	    	        }
+	    	  };
+	    mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+	
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	    @Override
+	    public void onItemClick(AdapterView parent, View view, int position, long id) {
+	        selectItem(position);
+	    }
+	}
+
+	private void selectItem(int position) {
+	    // Create a new fragment and specify the planet to show based on position
+
+
+	    // Highlight the selected item, update the title, and close the drawer
+	    mDrawerList.setItemChecked(position, true);
+	    setTitle(mTitles[position]);
+	    mDrawerLayout.closeDrawer(mDrawerList);
+	    
+	    Intent myIntent;
+	    switch (position) {
+	    case 0:
+	        myIntent=new Intent(MainActivity.this,MainActivity.class);
+	        startActivity(myIntent);
+	                 break;
+	    case 1:
+	        myIntent=new Intent(MainActivity.this,CrimeLogActivity.class);
+	        startActivity(myIntent);
+	                break;
+	    case 2:
+	        myIntent=new Intent(MainActivity.this,MainActivity.class);
+	        startActivity(myIntent);
+	                break;
+	    case 3:
+	        myIntent=new Intent(MainActivity.this,HelpActivity.class);
+	        startActivity(myIntent);
+	                break;
+	    case 4:
+	        myIntent=new Intent(MainActivity.this,MainActivity.class);
+	        startActivity(myIntent);
+	                break;
+	   default:
+	              break;
+	    }
 	}
 }

@@ -13,5 +13,23 @@
     <string name="title_activity_help">HelpActivity</string>
     <string name="title_activity_single_item">SingleItemActivity</string>
     <string name="Filter_by_Date_or_Crime_Type">Filter by Date or Crime</string>
-
+    <string-array name="choices_arr">
+        <item >None</item>
+        <item >Date Range</item>
+        <item >Crime Type</item>
+    </string-array>
+    <string-array name="titles">
+        <item>Map</item>
+        <item>Data</item>
+        <item>Call GTPD</item>
+        <item>Help</item>
+        <item>Settings</item>
+    </string-array>
+    <array name="icons">
+        <item>@drawable/assult</item>
+        <item>@drawable/charty</item>
+        <item>@drawable/phone</item>
+        <item>@drawable/whiteqm</item>
+        <item>@drawable/gear</item>
+    </array>
 </resources>

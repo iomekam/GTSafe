@@ -1,10 +1,18 @@
 package com.example.gtsafe.library.gcm;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.gtsafe.CleryActActivity;
+import com.example.gtsafe.CrimeLogActivity;
+import com.example.gtsafe.MainActivity;
+import com.example.gtsafe.R;
 import com.example.gtsafe.library.DBManager;
 
 public class GcmIntentService extends IntentService {
@@ -67,6 +75,9 @@ public class GcmIntentService extends IntentService {
         		}
         		else if(tag.equals("update_clery_act"))
         		{
+        			String message = "New Clery Act";
+        			Log.e("g", message);
+        	        generateNotification(this, message, tag);
     				id = Integer.parseInt(intent.getExtras().getString("ca_id"));
     				db.updateCleryAct(id);
         		}
@@ -76,5 +87,58 @@ public class GcmIntentService extends IntentService {
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+    }
+    
+    protected void onMessage(Context context, Intent intent) {
+        //Log.i(TAG, "Received message");
+    	String tag = intent.getExtras().getString("tag");    	
+		if(tag.equals("update_clery_act"))
+		{
+			String message = "New Clery Act";
+	        generateNotification(context, message, tag);
+		}
+		else if(tag.equals("update_crime_data"))
+		{
+			String message = "A new crime has arrived!";
+	        generateNotification(context, message, tag);
+		}
+        // notifies user
+    }
+    
+    private static void generateNotification(Context context, String message, String tag) {
+        int icon = R.drawable.ic_launcher;
+        long when = System.currentTimeMillis();
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = new Notification(icon, message, when);
+         
+        String title = context.getString(R.string.app_name);
+        
+        Intent notificationIntent = new Intent(context, MainActivity.class);
+
+		if(tag.equals("update_clery_act"))
+		{
+	        notificationIntent = new Intent(context, CleryActActivity.class);
+		}
+		else if(tag.equals("update_crime_data"))
+		{
+	        notificationIntent = new Intent(context, CrimeLogActivity.class);
+		}
+        
+        // set intent so it does not start a new activity
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent intent =
+                PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(context, title, message, intent);
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+         
+        // Play default notification sound
+        notification.defaults |= Notification.DEFAULT_SOUND;
+         
+        // Vibrate if vibrate is enabled
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
+        notificationManager.notify(0, notification);      
+ 
     }
 }

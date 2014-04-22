@@ -1,22 +1,45 @@
 package com.example.gtsafe;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gtsafe.library.DBManager;
 import com.example.gtsafe.library.MapHelper;
+import com.example.gtsafe.library.listeners.interfaces.Listable;
+import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
+import com.example.gtsafe.model.CrimeData;
+import com.example.gtsafe.model.OffenseType;
 import com.example.gtsafe.model.ZoneData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,8 +51,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.SupportMapFragment;
 
-public class CrimeMapActivity extends SuperActivity {
+public class CrimeMapActivity extends FragmentActivity {
 private GoogleMap mMap;
 private MapHelper helper;
 private Button filterButt;
@@ -37,13 +61,35 @@ private LatLngBounds coords = new LatLngBounds(
     new LatLng(33.770836, -84.407272), new LatLng(33.786638, -84.390492));
 private List<ZoneData> zones;
 private TextView date;
+private String [] mTitles;
+private RadioGroup radioGroup;
+private int selectedId;
+private ArrayAdapter<CrimeData> adapter;
+private int choice_index; 
+final DBManager manager = DBManager.getInstance();
+Object selectedItem = null;
+
+private CharSequence mDrawerTitle;
+private CharSequence mTitle;
+
+private DrawerLayout mDrawerLayout;
+private ListView mDrawerList;
+private ActionBarDrawerToggle mDrawerToggle;
+
+private List<RowItem> rowItems;
+private CustomAdapter adapter2;
+private String[] menutitles;
+private TypedArray menuIcons;
+
 
 protected void onCreate(Bundle savedInstanceState) {
 
 
 super.onCreate(savedInstanceState);
 setContentView(R.layout.activity_map);
-
+adapter = new ArrayAdapter<CrimeData>(CrimeMapActivity.this,
+		android.R.layout.simple_list_item_1, android.R.id.text1,
+		new LinkedList<CrimeData>());
 try {
     // Loading map
     initilizeMap();
@@ -52,16 +98,64 @@ try {
 } catch (Exception e) {
     e.printStackTrace();
 }
+mTitle = mDrawerTitle = getTitle();
+
+menutitles = getResources().getStringArray(R.array.titles);
+menuIcons = getResources().obtainTypedArray(R.array.icons);
+
+mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+rowItems = new ArrayList<RowItem>();
+
+for (int i = 0; i < menutitles.length; i++) {
+ RowItem items = new RowItem(menutitles[i], menuIcons.getResourceId(
+   i, -1));
+ rowItems.add(items);
+}
+
+menuIcons.recycle();
+
+adapter2 = new CustomAdapter(getApplicationContext(), rowItems);
+
+mDrawerList.setAdapter(adapter2);
+mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+	    R.drawable.ic_launcher, R.string.app_name,R.string.app_name) {
+	       public void onDrawerClosed(View view) {
+	         getActionBar().setTitle(mTitle);
+	         // calling onPrepareOptionsMenu() to show action bar icons
+	         invalidateOptionsMenu();
+	       }
+
+	        public void onDrawerOpened(View drawerView) {
+	              getActionBar().setTitle(mDrawerTitle);
+	               // calling onPrepareOptionsMenu() to hide action bar icons
+	              invalidateOptionsMenu();
+	         }
+	        @Override
+	        public void onDrawerSlide(View drawerView, float slideOffset)
+	        {
+	            super.onDrawerSlide(drawerView, slideOffset);
+	            mDrawerLayout.bringChildToFront(drawerView);
+	            mDrawerLayout.requestLayout();
+	        }
+	  };
+mDrawerLayout.setDrawerListener(mDrawerToggle);
+//////////////////////////////////////////////////////////////////
 
 }
 
 private void initilizeMap() {
 if (mMap == null) {
-    mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+    mMap = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
     mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     mMap.setMyLocationEnabled(true);
     helper = new MapHelper(mMap);
+    helper.getZonesDB();
     mMap = helper.populateZones();
+    helper.getCrimesDB();
     mMap = helper.populateCrimes();
     
     mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
@@ -97,27 +191,12 @@ if (mMap == null) {
             //note.setText(marker.getTitle() );
             // Returning the view containing InfoWindow contents
             return v;
-
         }
-
     });  
-    View veep = getLayoutInflater().inflate(R.layout.activity_map, null);
-	ImageButton help = (ImageButton)veep.findViewById(R.id.helpbutton2);
-	help.setOnClickListener(new View.OnClickListener() {
-		 @Override
-		 public void onClick(View v) {
-		        Intent myIntent=new Intent(CrimeMapActivity.this,HelpActivity.class);
-		        startActivity(myIntent);
-		 }
-		 });
-	ImageButton data = (ImageButton)veep.findViewById(R.id.datapage);
-	data.setOnClickListener(new View.OnClickListener() {
-		 @Override
-		 public void onClick(View v) {
-		        Intent myIntent=new Intent(CrimeMapActivity.this,DataActivity.class);
-		        startActivity(myIntent);
-		 }
-		 });
+    
+
+    
+
     
     zones = helper.getZones();
     Calendar currCal = Calendar.getInstance();
@@ -188,4 +267,179 @@ protected void onResume() {
 super.onResume();
 initilizeMap();
 }
+
+
+private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id) {
+        selectItem(position);
+    }
 }
+
+private void selectItem(int position) {
+    // Create a new fragment and specify the planet to show based on position
+
+
+    // Highlight the selected item, update the title, and close the drawer
+    mDrawerList.setItemChecked(position, true);
+    setTitle(mTitles[position]);
+    mDrawerLayout.closeDrawer(mDrawerList);
+    
+    Intent myIntent;
+    switch (position) {
+    case 0:
+        myIntent=new Intent(CrimeMapActivity.this,MainActivity.class);
+        startActivity(myIntent);
+                 break;
+    case 1:
+        myIntent=new Intent(CrimeMapActivity.this,CrimeLogActivity.class);
+        startActivity(myIntent);
+                break;
+    case 2:
+        myIntent=new Intent(CrimeMapActivity.this,MainActivity.class);
+        startActivity(myIntent);
+                break;
+    case 3:
+        myIntent=new Intent(CrimeMapActivity.this,HelpActivity.class);
+        startActivity(myIntent);
+                break;
+    case 4:
+        myIntent=new Intent(CrimeMapActivity.this,MainActivity.class);
+        startActivity(myIntent);
+                break;
+   default:
+              break;
+    }
+}
+
+
+@Override
+public void setTitle(CharSequence title) {
+    getActionBar().setTitle(title);
+}
+public boolean onCreateOptionsMenu(Menu menu) {
+    
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.map_menu, menu);
+    return true;
+}
+public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	    case R.id.map_filter:
+	        AlertDialog.Builder builder = new AlertDialog.Builder(CrimeMapActivity.this);
+	        // Set the dialog title
+	        String[] arr = {"None", "Date Range", "Crime Type"};
+	        choice_index = 0;
+	        builder.setTitle("Choose Filter")
+	        // Specify the list array, the items to be selected by default (null for none),
+	        // and the listener through which to receive callbacks when items are selected
+	               .setSingleChoiceItems(R.array.choices_arr, 0,
+	                          new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						choice_index = which;
+					}
+	               })
+	        // Set the action buttons
+	               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                   @Override
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       // User clicked OK, so save the mSelectedItems results somewhere
+	                       // or return them to the component that opened the dialog
+	                       dialog.dismiss();
+	               		AlertDialog.Builder b = new Builder(CrimeMapActivity.this);
+	                       if(choice_index == 0){
+	                    	   helper.updateCrimesCheck();
+	                       }
+	                       else if(choice_index == 1){
+	   					    LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+	   					    View customView = inflater.inflate(R.layout.double_date_picker, null);
+	   					    
+	   					    final DatePicker dpStartDate = (DatePicker) customView.findViewById(R.id.dpStartDate);
+	   					    final DatePicker dpEndDate = (DatePicker) customView.findViewById(R.id.dpEndDate);
+	   					  
+	   					    b.setTitle("Choose Dates");
+	   					    b.setView(customView); // Set the view of the dialog to your custom layout
+	   					    b.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+	   					        @SuppressWarnings("deprecation")
+	   							@Override
+	   					        public void onClick(DialogInterface dialog, int which) {
+	   					        	dialog.dismiss();
+	   								adapter.clear();
+	   					        	int startYear, startMonth, startDay, endYear, endMonth, endDay;
+	   					            startYear = dpStartDate.getYear();
+	   					            startMonth = dpStartDate.getMonth();
+	   					            startDay = dpStartDate.getDayOfMonth();
+	   					            endYear = dpEndDate.getYear();
+	   					            endMonth = dpEndDate.getMonth();
+	   					            endDay = dpEndDate.getDayOfMonth();
+	   					            //java.sql.Date jsqlD = java.sql.Date.valueOf( "2010-01-31" );
+	   					            @SuppressWarnings("deprecation")
+	   								Date start= Date.valueOf(startYear+"-"+startMonth+"-"+startDay);
+	   					            Date end= Date.valueOf(endYear+"-"+endMonth+"-"+endDay);
+	   					            manager.getCrimesByDate(start, end, new OnDBGetListener<CrimeData>() {
+	   
+	   									@Override
+	   									public void OnGet(List<CrimeData> list) {
+	   										helper.updateCrimes(list);
+	   										mMap.clear();
+	   									    mMap = helper.populateZones();
+	   									    mMap = helper.populateCrimes();
+	   									}
+	   								});
+	   					    
+	   					        }});  
+	   					    b.show();
+	                       }
+	                       else if(choice_index == 2){
+	   						List<String> list = new LinkedList<String>();
+	   						for(Listable item: OffenseType.values())
+	   						{
+	   							list.add(((Listable)item).listString());
+	   						}
+	   						final String[] newlist = list.toArray(new String[list.size()]);
+	   
+	   						b.setItems(newlist, new OnClickListener() {
+	   
+	   							@Override
+	   							public void onClick(DialogInterface dialog, int position) {
+	   								dialog.dismiss();
+	   								adapter.clear();
+	   								final OffenseType offType = OffenseType.getOffenseType(newlist[position]);
+	   								selectedItem = offType;
+	   								manager.getCrimesByType(offType, new OnDBGetListener<CrimeData>() {
+	   									@Override
+	   									public void OnGet(List<CrimeData> list) {
+	   										helper.updateCrimes(list);
+	   										mMap.clear();
+	   									    mMap = helper.populateZones();
+	   									    mMap = helper.populateCrimes();
+	   									}
+	   								});
+	   							}
+	   						});
+	   						b.show();
+	                       }
+	                   }
+	                   
+	               })
+	               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                   @Override
+	                   public void onClick(DialogInterface dialog, int id) {
+	                	   dialog.dismiss();
+	                   }
+	               });
+
+
+			builder.show();
+	    return true;
+	    default:
+	    return super.onOptionsItemSelected(item);
+	}
+	
+ 
+}
+}
+
+

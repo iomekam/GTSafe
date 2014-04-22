@@ -1,11 +1,14 @@
 package com.example.gtsafe.library;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
+import com.example.gtsafe.CrimeLogActivity;
 import com.example.gtsafe.R;
 import com.example.gtsafe.library.listeners.interfaces.OnDBGetListener;
 import com.example.gtsafe.model.CrimeData;
@@ -24,6 +27,7 @@ public class MapHelper {
 	private List<ZoneData> zones;
 	private GoogleMap map;
 	private List<CrimeData> crimes;
+	private ArrayAdapter<CrimeData> adapter;
 	
 	public MapHelper(GoogleMap mappy)
 	{
@@ -31,7 +35,6 @@ public class MapHelper {
 	}
 	
 	public GoogleMap populateZones(){
-		zones = db.getAllZones();
 		if (zones != null){
 			if (zones.size() > 0){
 				for(int x = 0; x < zones.size(); x++){
@@ -53,10 +56,7 @@ public class MapHelper {
 					{
 						color = Color.RED;
 					}
-					
-					
 					color = Color.argb(150, Color.red(color), Color.green(color), Color.blue(color));
-					
 					if(zones.get(x).getZoneID() < 33)
 					{
 					    this.map.addPolygon(new PolygonOptions()
@@ -65,19 +65,6 @@ public class MapHelper {
 			            .fillColor(color));
 					}
 				    
-//			    	double xcentroid = 0; 
-//			    	double ycentroid = 0;
-//				    List<LatLng> coords = zones.get(x).getLocation();
-//				    for(int i = 0; i < coords.size(); i++){
-//				    	xcentroid+= coords.get(i).latitude;
-//				    	ycentroid+= coords.get(i).longitude;
-//				    }
-//				    xcentroid = xcentroid/coords.size();
-//				    ycentroid = ycentroid/coords.size();
-//				    Marker zoneIterator = this.map.addMarker(new MarkerOptions()
-//                    .position(new LatLng(xcentroid, ycentroid))
-//                    .title("Zone: " + x)
-//                    .snippet("" + zones.get(x).getZoneInformation().getDescription()));
 				}
 				}
 			}
@@ -90,16 +77,37 @@ public class MapHelper {
 		return zones;
 	}
 	
-	public GoogleMap populateCrimes(){
+	public void getCrimesDB(){
 	    Calendar currCal = Calendar.getInstance();
 	    int days = (int) (currCal.getActualMaximum(Calendar.DAY_OF_MONTH) / 1.5);
 	    currCal.add(Calendar.DATE, -1 * days);
-	    Log.e("DATE", new java.sql.Date(currCal.getTimeInMillis()).toString());
 	    db.getCrimesByDate(new java.sql.Date(currCal.getTimeInMillis()), new OnDBGetListener<CrimeData>(){
-			@SuppressWarnings("deprecation")
-			@Override
 			public void OnGet(List<CrimeData> list) {
 				crimes = list;
+				populateCrimes();
+			}
+	    });
+	    }
+	public void updateCrimesCheck(){
+	    Calendar currCal = Calendar.getInstance();
+	    int days = (int) (currCal.getActualMaximum(Calendar.DAY_OF_MONTH) / 1.5);
+	    currCal.add(Calendar.DATE, -1 * days);
+	    db.getCrimesByDate(new java.sql.Date(currCal.getTimeInMillis()), new OnDBGetListener<CrimeData>(){
+			public void OnGet(List<CrimeData> list) {
+				crimes = list;
+				map.clear();
+			    populateZones();
+		        populateCrimes();
+			}
+	    });
+	}
+	public void getZonesDB(){
+		zones = db.getAllZones();
+	}
+	public void updateCrimes(List<CrimeData> newAdapter){
+		this.crimes = newAdapter;
+	}
+	public GoogleMap populateCrimes(){
 				for(int x = 0; x < crimes.size(); x++){
 					if(crimes.get(x).getOffense() == OffenseType.AGG_ASSAULT){
 						  map.addMarker(new MarkerOptions()
@@ -164,19 +172,14 @@ public class MapHelper {
 	                      .snippet("Date: " + crimes.get(x).getDate().toLocaleString() + "|" + "Location: " + crimes.get(x).getLocationName() + "|" + "Details: " + crimes.get(x).getOffenseDescription())
 	                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.part2)));
 					}
-				}
-			}
-		});
-		 this.map.addCircle(new CircleOptions()
-	     .center(new LatLng(33.775618,-84.396285))
-	     .radius(10)
-	     .strokeColor(Color.RED)
-	     .fillColor(Color.BLUE));	
-		 return this.map; 
+	}
+					return this.map; 
+	}
+	public void clearMap(){
+		this.map.clear();
 	}
 	
 	public List getCrimeCount(){
-		
 		return crimes;
 	}
 }
