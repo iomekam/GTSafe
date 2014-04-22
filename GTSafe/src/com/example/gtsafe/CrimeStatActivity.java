@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
+import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -217,6 +218,9 @@ public class CrimeStatActivity extends SuperActivity {
 				}
 				else if (type == Search.CRIME_TYPE)
 				{
+					/*adapter.clear();
+					adapter.addAll(crimeData);
+					adapter.notifyDataSetChanged();*/
 					//Where the list of different crimes comes from
 					showPopUp2(type.toString(), type.getContent(), type);
 					searchCrimes2.setSelection(-1);
@@ -1924,7 +1928,8 @@ public class CrimeStatActivity extends SuperActivity {
 		Log.e("g","g");
 		plot.setTicksPerRangeLabel(3);
 		plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-		plot.setRangeTopMax(150);
+		plot.setRangeBoundaries(0, 150, BoundaryMode.FIXED);
+		plot.setRangeStepValue(10);
 
 
 		//plot.setTicksPerDomainLabel(12);
