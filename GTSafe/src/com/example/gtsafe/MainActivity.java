@@ -71,8 +71,9 @@ public class MainActivity extends SuperActivity {
 		}
 		else
 		{
-			//manager.loadingScreen = new ProgressDialog(this);
-			//manager.deserializeTable();
+	        Intent myIntent=new Intent(MainActivity.this,CrimeMapActivity.class);
+	        startActivity(myIntent);
+	        finish();
 		}
 		
 		view =  (TextView)findViewById(R.id.textView1);
@@ -279,7 +280,6 @@ public class MainActivity extends SuperActivity {
 			 
 			@Override
 			public void onClick(View v) {
- 
 				Intent callIntent = new Intent(Intent.ACTION_CALL);
 				callIntent.setData(Uri.parse("tel:4048942500"));
 				startActivity(callIntent);
@@ -299,8 +299,6 @@ public class MainActivity extends SuperActivity {
 
 	private void selectItem(int position) {
 	    // Create a new fragment and specify the planet to show based on position
-
-
 	    // Highlight the selected item, update the title, and close the drawer
 	    mDrawerList.setItemChecked(position, true);
 	    setTitle(mTitles[position]);

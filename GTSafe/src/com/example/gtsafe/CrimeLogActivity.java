@@ -80,6 +80,9 @@ public class CrimeLogActivity extends SuperActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_log);
+		if(getActionBar()!= null){
+			getActionBar().setTitle("Crime Log");
+		}
 		dateShow = (TextView) findViewById(R.id.dateShowing);
 		adapter = new ArrayAdapter<CrimeData>(CrimeLogActivity.this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,

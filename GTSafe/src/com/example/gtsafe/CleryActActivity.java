@@ -22,7 +22,9 @@ public class CleryActActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		if(getActionBar()!= null){
+			getActionBar().setTitle("Clery Acts");
+		}
 		models = DBManager.getInstance().getAllCleryActs();
 		
 		final ArrayAdapter<CleryActModel> adapter = new ArrayAdapter<CleryActModel>(this, R.layout.activity_clery_act, R.id.cleryact, models);

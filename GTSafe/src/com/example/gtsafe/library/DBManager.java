@@ -173,7 +173,7 @@ public class DBManager {
 		{
 			table.remove(crimeTypeEntry);
 		}
-		else if(option == TableEntry.CRIMES_ZONE)
+		else if(option == TableEntry.CRIMES_ZONE)runing
 		{
 			table.remove(crimeZoneEntry);
 		}

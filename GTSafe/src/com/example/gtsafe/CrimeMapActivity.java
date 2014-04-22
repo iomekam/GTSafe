@@ -9,7 +9,9 @@ import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -18,6 +20,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,12 +89,22 @@ private TypedArray menuIcons;
 
 protected void onCreate(Bundle savedInstanceState) {
 
-
 super.onCreate(savedInstanceState);
 setContentView(R.layout.activity_map);
 adapter = new ArrayAdapter<CrimeData>(CrimeMapActivity.this,
 		android.R.layout.simple_list_item_1, android.R.id.text1,
 		new LinkedList<CrimeData>());
+getActionBar().setTitle("Crime Map");
+if(manager.runningInit)
+{
+	manager.initDialog = ProgressDialog.show(this, "Initialzing", "Loading data into app. Please wait", true);
+}
+else
+{
+	//manager.loadingScreen = new ProgressDialog(this);
+	//manager.deserializeTable();
+}
+
 try {
     // Loading map
     initilizeMap();
@@ -130,7 +145,7 @@ mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 	       }
 
 	        public void onDrawerOpened(View drawerView) {
-	              getActionBar().setTitle(mDrawerTitle);
+	              //getActionBar().setTitle(mDrawerTitle);
 	               // calling onPrepareOptionsMenu() to hide action bar icons
 	              invalidateOptionsMenu();
 	         }
@@ -282,13 +297,13 @@ private void selectItem(int position) {
 
     // Highlight the selected item, update the title, and close the drawer
     mDrawerList.setItemChecked(position, true);
-    setTitle(mTitles[position]);
+    //setTitle(mTitles[position]);
     mDrawerLayout.closeDrawer(mDrawerList);
     
     Intent myIntent;
     switch (position) {
     case 0:
-        myIntent=new Intent(CrimeMapActivity.this,MainActivity.class);
+        myIntent=new Intent(CrimeMapActivity.this,DataActivity.class);
         startActivity(myIntent);
                  break;
     case 1:
@@ -296,15 +311,13 @@ private void selectItem(int position) {
         startActivity(myIntent);
                 break;
     case 2:
-        myIntent=new Intent(CrimeMapActivity.this,MainActivity.class);
-        startActivity(myIntent);
+		PhoneCallListener phoneListener = new PhoneCallListener();
+		TelephonyManager telephonyManager = (TelephonyManager) this
+			.getSystemService(Context.TELEPHONY_SERVICE);
+		telephonyManager.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
                 break;
     case 3:
         myIntent=new Intent(CrimeMapActivity.this,HelpActivity.class);
-        startActivity(myIntent);
-                break;
-    case 4:
-        myIntent=new Intent(CrimeMapActivity.this,MainActivity.class);
         startActivity(myIntent);
                 break;
    default:
@@ -439,6 +452,48 @@ public boolean onOptionsItemSelected(MenuItem item) {
 	}
 	
  
+}
+private class PhoneCallListener extends PhoneStateListener {
+	 
+	private boolean isPhoneCalling = false;
+
+	String LOG_TAG = "LOGGING 123";
+
+	public void onCallStateChanged(int state, String incomingNumber) {
+
+		if (TelephonyManager.CALL_STATE_RINGING == state) {
+			// phone ringing
+			Log.i(LOG_TAG, "RINGING, number: " + incomingNumber);
+		}
+
+		if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
+			// active
+			Log.i(LOG_TAG, "OFFHOOK");
+
+			isPhoneCalling = true;
+		}
+
+		if (TelephonyManager.CALL_STATE_IDLE == state) {
+			// run when class initial and phone call ended, 
+			// need detect flag from CALL_STATE_OFFHOOK
+			Log.i(LOG_TAG, "IDLE");
+
+			if (isPhoneCalling) {
+
+				Log.i(LOG_TAG, "restart app");
+
+				// restart app
+				Intent i = getBaseContext().getPackageManager()
+					.getLaunchIntentForPackage(
+						getBaseContext().getPackageName());
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
+
+				isPhoneCalling = false;
+			}
+
+		}
+	}
 }
 }
 
