@@ -13,6 +13,7 @@
     <string name="title_activity_help">HelpActivity</string>
     <string name="title_activity_single_item">SingleItemActivity</string>
     <string name="Filter_by_Date_or_Crime_Type">Filter by Date or Crime</string>
+    <string name="Filter_by_Crime_Type">Filter by Crime</string>
     <string-array name="choices_arr">
         <item >None</item>
         <item >Date Range</item>
@@ -32,4 +33,5 @@
         <item>@drawable/whiteqm</item>
         <item>@drawable/gear</item>
     </array>
+
 </resources>

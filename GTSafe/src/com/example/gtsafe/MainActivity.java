@@ -9,10 +9,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,6 +43,10 @@ public class MainActivity extends SuperActivity {
 	private Button view_Button;
 	private Button data_Button;
 	private ImageButton help_Button; // Omar created this.
+	private Button call_Button;
+	String bla;
+
+    
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 
@@ -155,8 +163,16 @@ public class MainActivity extends SuperActivity {
 				@Override
 				public void OnGet(List<CrimeData> list) {
 					view.setText("Crimes by Date: " + list.size());
+					//bla = "" + list.size();
 				}
 			});
+			/*Context context = getApplicationContext();
+			
+			CharSequence text = "" + bla;
+			int duration = Toast.LENGTH_LONG;
+
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();*/
 			manager.getCrimesByType(OffenseType.NON_CRIME,  new OnDBGetListener<CrimeData>(){
 	
 				@Override
@@ -253,6 +269,25 @@ public class MainActivity extends SuperActivity {
 	    	        }
 	    	  };
 	    mDrawerLayout.setDrawerListener(mDrawerToggle);
+		// add PhoneStateListener
+				PhoneCallListener phoneListener = new PhoneCallListener();
+				TelephonyManager telephonyManager = (TelephonyManager) this
+					.getSystemService(Context.TELEPHONY_SERVICE);
+				telephonyManager.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
+		call_Button = (Button) findViewById(R.id.callbutton);
+		call_Button.setOnClickListener(new View.OnClickListener() {
+			 
+			@Override
+			public void onClick(View v) {
+ 
+				Intent callIntent = new Intent(Intent.ACTION_CALL);
+				callIntent.setData(Uri.parse("tel:4048942500"));
+				startActivity(callIntent);
+ 
+			}
+ 
+		});
+
 	}
 	
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -297,4 +332,48 @@ public class MainActivity extends SuperActivity {
 	              break;
 	    }
 	}
+	
+	//monitor phone call activities
+		private class PhoneCallListener extends PhoneStateListener {
+	 
+			private boolean isPhoneCalling = false;
+	 
+			String LOG_TAG = "LOGGING 123";
+	 
+			public void onCallStateChanged(int state, String incomingNumber) {
+	 
+				if (TelephonyManager.CALL_STATE_RINGING == state) {
+					// phone ringing
+					Log.i(LOG_TAG, "RINGING, number: " + incomingNumber);
+				}
+	 
+				if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
+					// active
+					Log.i(LOG_TAG, "OFFHOOK");
+	 
+					isPhoneCalling = true;
+				}
+	 
+				if (TelephonyManager.CALL_STATE_IDLE == state) {
+					// run when class initial and phone call ended, 
+					// need detect flag from CALL_STATE_OFFHOOK
+					Log.i(LOG_TAG, "IDLE");
+	 
+					if (isPhoneCalling) {
+	 
+						Log.i(LOG_TAG, "restart app");
+	 
+						// restart app
+						Intent i = getBaseContext().getPackageManager()
+							.getLaunchIntentForPackage(
+								getBaseContext().getPackageName());
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(i);
+	 
+						isPhoneCalling = false;
+					}
+	 
+				}
+			}
+		}
 }
