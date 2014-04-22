@@ -367,7 +367,7 @@ public class MainActivity extends SuperActivity {
 								getBaseContext().getPackageName());
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(i);
-	 
+						
 						isPhoneCalling = false;
 					}
 	 
