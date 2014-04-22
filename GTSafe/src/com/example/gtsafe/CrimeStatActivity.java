@@ -143,7 +143,9 @@ public class CrimeStatActivity extends SuperActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crime_stat);
-		
+		if(getActionBar()!= null){
+			getActionBar().setTitle("Crime Stats");
+		}
 		adapter = new ArrayAdapter<CrimeData>(CrimeStatActivity.this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				new LinkedList<CrimeData>());

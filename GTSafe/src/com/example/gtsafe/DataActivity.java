@@ -14,6 +14,9 @@ public class DataActivity extends TabActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data);
+		if(getActionBar()!= null){
+			getActionBar().setTitle("Crime Data");
+		}
         // create the TabHost that will contain the Tabs
         TabHost tabHost = (TabHost)findViewById(android.R.id.tabhost);
 
