@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -315,6 +316,9 @@ private void selectItem(int position) {
 		TelephonyManager telephonyManager = (TelephonyManager) this
 			.getSystemService(Context.TELEPHONY_SERVICE);
 		telephonyManager.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:6786513389"));
+		startActivity(callIntent);
                 break;
     case 3:
         myIntent=new Intent(CrimeMapActivity.this,HelpActivity.class);
